@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TC_quickTake : MonoBehaviour
+public class LanguagequickTake : MonoBehaviour
 {
     public string key;
 
@@ -16,7 +16,7 @@ public class TC_quickTake : MonoBehaviour
     void update_text()
     {
         Text text = GetComponent<Text>();
-        if (text != null) text.text = TC_manager.GetInstance().GetTC_value(key);
+        if (text != null) text.text = Language_manager.GetLanguage_value(key);
     }
 
     void OnDestory()

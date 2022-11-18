@@ -72,16 +72,11 @@ public class save_item : MonoBehaviour
         if (isDelete && data != null)
         {
             Debug.Log("[Save/Load] Prepate to Delete!");
-            popup_manager.GetInstance().show_normal_window(
-                TC_manager.GetInstance().GetTC_value("popup_askDeleteTitle"),
-                TC_manager.GetInstance().GetTC_value("popup_askDeleteContent"),
-                DeleteData,
-                null,
-                true,
-                () =>
-                {
-                    AudioManager.PlaySE("open");
-                }
+            ui_manager.GetInstance().show_normal_window(
+                Language_manager.GetLanguage_value("popup_askDeleteTitle"),
+                Language_manager.GetLanguage_value("popup_askDeleteContent"),
+                yesCB:DeleteData,
+                null
             );
 
             return;
@@ -91,41 +86,31 @@ public class save_item : MonoBehaviour
         }
 
         if (type == 1) {
-            popup_manager.GetInstance().show_normal_window(
-                data == null ? TC_manager.GetInstance().GetTC_value("popup_askSaveTitle") : TC_manager.GetInstance().GetTC_value("popup_askSaveOverwriteTitle"),
-                data == null ? TC_manager.GetInstance().GetTC_value("popup_askSaveContent") : TC_manager.GetInstance().GetTC_value("popup_askSaveOverwriteContent"),
-                () =>
+            ui_manager.GetInstance().show_normal_window(
+                data == null ? Language_manager.GetLanguage_value("popup_askSaveTitle") : Language_manager.GetLanguage_value("popup_askSaveOverwriteTitle"),
+                data == null ? Language_manager.GetLanguage_value("popup_askSaveContent") : Language_manager.GetLanguage_value("popup_askSaveOverwriteContent"),
+				yesCB: () =>
                 {
                     Debug.Log("[Save/Load] Save save data");
                     updateSave();
                 },
-                null,
-                true,
-                () =>
-                {
-                    AudioManager.PlaySE("open");
-                }
+                null
             );
 
         }
         else if (type == 0 && data != null)
         {
-            //TC_manager.GetInstance().GetTC_value("setting_saveSettingContent")
-            popup_manager.GetInstance().show_normal_window(
-                TC_manager.GetInstance().GetTC_value("popup_askLoadTitle"),
-                TC_manager.GetInstance().GetTC_value("popup_askLoadContent"),
-                () =>
+            //Language_manager.GetLanguage_value("setting_saveSettingContent")
+            ui_manager.GetInstance().show_normal_window(
+                Language_manager.GetLanguage_value("popup_askLoadTitle"),
+                Language_manager.GetLanguage_value("popup_askLoadContent"),
+				yesCB: () =>
                 {
                     Debug.Log("[Save/Load] Load save data");
                     loadingManager.GetInstance().StartLoading();
                     //mainGameManager.GetInstance().StartGame(data, () => { controller.gameObject.SetActive(false); loadingManager.GetInstance().DoneLoading(); });
                 },
-                null,
-                true,
-                () =>
-                {
-                    AudioManager.PlaySE("open");
-                }
+                null
             );
         }
                 
@@ -142,15 +127,10 @@ public class save_item : MonoBehaviour
 
         deleteOBJ.SetActive(false);
         data = null;
-        popup_manager.GetInstance().show_normal_window(
-            TC_manager.GetInstance().GetTC_value("popup_DoneDeleteTitle"),
-            TC_manager.GetInstance().GetTC_value("popup_DoneDeleteContent"),
-            null,
-            true,
-            () =>
-            {
-                AudioManager.PlaySE("open");
-            }
+        ui_manager.GetInstance().show_normal_window(
+            Language_manager.GetLanguage_value("popup_DoneDeleteTitle"),
+            Language_manager.GetLanguage_value("popup_DoneDeleteContent"),
+            null
         );
     }
 
@@ -177,12 +157,12 @@ public class save_item : MonoBehaviour
         SaveGame.customSavePath = Path.Combine(Application.streamingAssetsPath, "data", "saveData");
         data = SaveGame.Load<userData.save_data>("save_data_" + item_id, SaveGamePath.CustomPath);
         text_id.text = String.Format("No.{0}", data.id);
-        //text_data.text = String.Format("{0} {1}\n{2}{3}", TC_manager.GetInstance().GetTC_value("day"), data.game_day, TC_manager.GetInstance().GetTC_value("saiminLV"), data.skill.saiminLV);
+        //text_data.text = String.Format("{0} {1}\n{2}{3}", Language_manager.GetLanguage_value("day"), data.game_day, Language_manager.GetLanguage_value("saiminLV"), data.skill.saiminLV);
         text_data.text = text_data.text.Replace("\\n", "\n");
         int hour = (int)data.playTime.TotalSeconds / 3600;
         int minute = ((int)data.playTime.TotalSeconds % 3600) / 60;
         int sec = ((int)data.playTime.TotalSeconds % 3600) % 60;
-        text_playTime.text = String.Format("{0} - {1:00.}:{2:00.}:{3:00.}", TC_manager.GetInstance().GetTC_value("playTime"), hour, minute, sec);
+        text_playTime.text = String.Format("{0} - {1:00.}:{2:00.}:{3:00.}", Language_manager.GetLanguage_value("playTime"), hour, minute, sec);
     }
 
     public void initDelete()

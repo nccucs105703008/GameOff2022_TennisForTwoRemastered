@@ -50,11 +50,11 @@ public class loadingManager : MonoBehaviour
 
         if (loadOBJ_instance == null)
         {
-            loadOBJ_instance = Instantiate(FileManager.LoadPrefab("loadingOBJ"), popup_manager.GetInstance().Get_popLayer());
+            loadOBJ_instance = Instantiate(FileManager.LoadPrefab("loadingOBJ"), ui_manager.GetInstance().Get_UILayer());
         }
         else
         {
-            int count = popup_manager.GetInstance().Get_popLayer().childCount;
+            int count = ui_manager.GetInstance().Get_UILayer().childCount;
             loadOBJ_instance.transform.SetSiblingIndex(count - 1);
         }
 
@@ -70,11 +70,11 @@ public class loadingManager : MonoBehaviour
     {
         if (blockOBJ_instance == null)
         {
-            blockOBJ_instance = Instantiate(FileManager.LoadPrefab("blockOBJ"), popup_manager.GetInstance().Get_popLayer());
+            blockOBJ_instance = Instantiate(FileManager.LoadPrefab("blockOBJ"), ui_manager.GetInstance().Get_UILayer());
         }
         else
         {
-            int count = popup_manager.GetInstance().Get_popLayer().childCount;
+            int count = ui_manager.GetInstance().Get_UILayer().childCount;
             blockOBJ_instance.transform.SetSiblingIndex(count - 1);
         }
 

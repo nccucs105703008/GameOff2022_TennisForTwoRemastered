@@ -90,6 +90,19 @@ public class AudioManager : MonoBehaviour
 		Fungus.FungusManager.Instance.MusicManager.PlaySound(targetAC, se_volume);
 	}
 
+	static public void PlaySE(AudioClip targetAC) {
+		if (isInit == false) {
+			initSetting();
+		}
+
+		if (targetAC == null) {
+			Debug.LogError("PlaySE Missing AudioClip");
+			return;
+		}
+
+		Fungus.FungusManager.Instance.MusicManager.PlaySound(targetAC, se_volume);
+	}
+
 	static public void SetBGMVolume(float value) {
 		Fungus.FungusManager.Instance.MusicManager.SetAudioVolume(value, 0.1f, null);
 		PlayerPrefs.SetFloat("BGMVolume", value);

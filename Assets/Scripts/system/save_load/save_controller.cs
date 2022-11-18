@@ -22,7 +22,6 @@ public class save_controller : MonoBehaviour
     public void init(int type)
     {
         loadingManager.GetInstance().blockScreen();
-        closeManager.GetInstance().save_Controller = this;
         CoroutineHub.GetInstance().StartCoroutine(init_(type));
     }
 
@@ -31,10 +30,10 @@ public class save_controller : MonoBehaviour
         switch (type)
         {
             case 0: //載入
-                title.text = TC_manager.GetInstance().GetTC_value("saveLoad_loadTitle");
+                title.text = Language_manager.GetLanguage_value("saveLoad_loadTitle");
                 break;
             case 1: //存檔
-                title.text = TC_manager.GetInstance().GetTC_value("saveLoad_saveTitle");
+                title.text = Language_manager.GetLanguage_value("saveLoad_saveTitle");
                 break;
         }
 
@@ -72,8 +71,8 @@ public class save_controller : MonoBehaviour
 
         showPage(0);
 
-        pop_item pop_Item = GetComponent<pop_item>();
-        pop_Item.popup();
+        baseUIView baseUIView = GetComponent<baseUIView>();
+        baseUIView.popup();
         loadingManager.GetInstance().DoneLoading();
     }
 

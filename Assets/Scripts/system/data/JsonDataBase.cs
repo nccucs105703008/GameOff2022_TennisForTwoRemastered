@@ -6,11 +6,9 @@ using LitJson;
 
 public class JsonDataBase : MonoBehaviour
 {
-	public static JsonData TC_datas;
+	public static bool isInit = false;
+	public static JsonData Language_datas;
 	public static JsonData Global_datas;
-	public static JsonData Command_datas;
-	public static JsonData Item_datas;
-	public static JsonData Effect_datas;
 
 	public static void Init(Action<string> callBack = null) {
 		CoroutineHub.GetInstance().StartCoroutine(_Init(callBack));
@@ -18,12 +16,12 @@ public class JsonDataBase : MonoBehaviour
 
 	static IEnumerator _Init(Action<string> callBack) {
 		string err = "";
-		bool isInit = false;
+		bool isLoading = false;
 		yield return 0;
 
-		//TC
-		isInit = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_TC((err_) => { err = err_; isInit = false; }));
+		//Language
+		isLoading = true;
+		CoroutineHub.GetInstance().StartCoroutine(update_data_Language((err_) => { err = err_; isLoading = false; }));
 		yield return new WaitWhile(() => isInit);
 		if (err != "") {
 			callBack?.Invoke("error");
@@ -31,40 +29,15 @@ public class JsonDataBase : MonoBehaviour
 		}
 
 		//Global
-		isInit = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Global((err_) => { err = err_; isInit = false; }));
+		isLoading = true;
+		CoroutineHub.GetInstance().StartCoroutine(update_data_Global((err_) => { err = err_; isLoading = false; }));
 		yield return new WaitWhile(() => isInit);
 		if (err != "") {
 			callBack?.Invoke("error");
 			yield break;
 		}
 
-		//command
 		isInit = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Command((err_) => { err = err_; isInit = false; }));
-		yield return new WaitWhile(() => isInit);
-		if (err != "") {
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		//item
-		isInit = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Item((err_) => { err = err_; isInit = false; }));
-		yield return new WaitWhile(() => isInit);
-		if (err != "") {
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		//effect
-		isInit = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Effect((err_) => { err = err_; isInit = false; }));
-		yield return new WaitWhile(() => isInit);
-		if (err != "") {
-			callBack?.Invoke("error");
-			yield break;
-		}
 
 		yield return 0;
 		callBack?.Invoke("");
@@ -78,15 +51,15 @@ public class JsonDataBase : MonoBehaviour
 	}
 
 
-	//TC
-	private static IEnumerator update_data_TC(Action<string> callBack) {
-		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/clientTC.json"));
+	//Language
+	private static IEnumerator update_data_Language(Action<string> callBack) {
+		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/LanguageData.json"));
 
 		yield return uwr.SendWebRequest();
 
 		if (uwr.isNetworkError || uwr.isHttpError) {
 			Debug.Log(uwr.error);
-			Debug.LogWarning("TC data load fail!");
+			Debug.LogWarning("Language data load fail!");
 			callBack?.Invoke("error");
 			yield break;
 		}
@@ -94,10 +67,10 @@ public class JsonDataBase : MonoBehaviour
 		string data_raw = uwr.downloadHandler.text;
 		if (data_raw != null) {
 			//data_raw = DeEncode.Decrypt(data_raw);
-			TC_datas = JsonMapper.ToObject(data_raw);
+			Language_datas = JsonMapper.ToObject(data_raw);
 		}
 		else {
-			Debug.LogWarning("TC data load fail!");
+			Debug.LogWarning("Language data load fail!");
 			callBack?.Invoke("error");
 			yield break;
 		}
@@ -132,84 +105,4 @@ public class JsonDataBase : MonoBehaviour
 		callBack?.Invoke("");
 	}
 
-	//Command
-	private static IEnumerator update_data_Command(Action<string> callBack) {
-		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/command.json"));
-
-		yield return uwr.SendWebRequest();
-
-		if (uwr.isNetworkError || uwr.isHttpError) {
-			Debug.Log(uwr.error);
-			Debug.LogWarning("Command data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		string data_raw = uwr.downloadHandler.text;
-		if (data_raw != null) {
-			//data_raw = DeEncode.Decrypt(data_raw);
-			Command_datas = JsonMapper.ToObject(data_raw);
-		}
-		else {
-			Debug.LogWarning("command data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		callBack?.Invoke("");
-	}
-
-	//Item
-	private static IEnumerator update_data_Item(Action<string> callBack) {
-		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/item.json"));
-
-		yield return uwr.SendWebRequest();
-
-		if (uwr.isNetworkError || uwr.isHttpError) {
-			Debug.Log(uwr.error);
-			Debug.LogWarning("item data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		string data_raw = uwr.downloadHandler.text;
-		if (data_raw != null) {
-			//data_raw = DeEncode.Decrypt(data_raw);
-			Item_datas = JsonMapper.ToObject(data_raw);
-		}
-		else {
-			Debug.LogWarning("item data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		callBack?.Invoke("");
-	}
-
-	//Effect
-	private static IEnumerator update_data_Effect(Action<string> callBack) {
-		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/effect.json"));
-
-		yield return uwr.SendWebRequest();
-
-		if (uwr.isNetworkError || uwr.isHttpError) {
-			Debug.Log(uwr.error);
-			Debug.LogWarning("effect data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		string data_raw = uwr.downloadHandler.text;
-		if (data_raw != null) {
-			//data_raw = DeEncode.Decrypt(data_raw);
-			Effect_datas = JsonMapper.ToObject(data_raw);
-		}
-		else {
-			Debug.LogWarning("effect data load fail!");
-			callBack?.Invoke("error");
-			yield break;
-		}
-
-		callBack?.Invoke("");
-	}
 }

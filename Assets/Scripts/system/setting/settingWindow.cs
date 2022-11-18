@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class settingWindow : MonoBehaviour
+public class settingWindow : baseUIView
 {
     public Slider bgm_volume;
     public Slider sound_volume;
@@ -15,7 +15,6 @@ public class settingWindow : MonoBehaviour
     public void init()
     {
         loadingManager.GetInstance().StartLoading();
-        closeManager.GetInstance().settingWindow = this;
         CoroutineHub.GetInstance().StartCoroutine(init_());
     }
 
@@ -50,44 +49,31 @@ public class settingWindow : MonoBehaviour
 
         fullscreen.isOn = resolution_manager.IsFullScreen;
 
-        pop_item pop_Item = GetComponent<pop_item>();
-        pop_Item.Setting_CB(null, close);
-        pop_Item.Setting_onlyCB(false, true);
-        pop_Item.Setting_needSE_fromCloseManager(false);
-        pop_Item.popup();
+        Setting_CB(null, close);
+        Setting_onlyCB(false, true);
+        popup();
         loadingManager.GetInstance().DoneLoading();
     }
 
     public void pressSave()
     {
-        popup_manager.GetInstance().show_normal_window(TC_manager.GetInstance().GetTC_value("setting_saveSettingTitle"),
-            TC_manager.GetInstance().GetTC_value("setting_saveSettingContent"),
-            save_setting,
-            null,
-            true,
-            () =>
-            {
-                AudioManager.PlaySE("open");
-            }
+        ui_manager.GetInstance().show_normal_window(Language_manager.GetLanguage_value("setting_saveSettingTitle"),
+            Language_manager.GetLanguage_value("setting_saveSettingContent"),
+			yesCB:save_setting,
+            null
         );
     }
 
     public void close()
     {
-        popup_manager.GetInstance().show_normal_window(
-            TC_manager.GetInstance().GetTC_value("setting_closeSettingTitle"),
-            TC_manager.GetInstance().GetTC_value("setting_closeSettingContent"),
-            () =>
+        ui_manager.GetInstance().show_normal_window(
+            Language_manager.GetLanguage_value("setting_closeSettingTitle"),
+            Language_manager.GetLanguage_value("setting_closeSettingContent"),
+			yesCB: () =>
             {
                 gameObject.SetActive(false);
             },
             null
-            ,
-            true,
-            () =>
-            {
-                AudioManager.PlaySE("open");
-            }
         );
     }
 

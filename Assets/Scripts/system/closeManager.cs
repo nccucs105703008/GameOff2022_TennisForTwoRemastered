@@ -74,14 +74,10 @@ public class closeManager : MonoBehaviour
     /// <summary>
     /// all windows
     /// </summary>
-    public save_controller save_Controller;
-    public settingWindow settingWindow;
 
     public void closeAllWindows()
     {
-        if (save_Controller != null) save_Controller.gameObject.SetActive(false);
-        if (settingWindow != null) settingWindow.gameObject.SetActive(false);
-        popup_manager.GetInstance().closeAllPOPUP();
+        ui_manager.GetInstance().closeAllUI();
     }
 
 }
