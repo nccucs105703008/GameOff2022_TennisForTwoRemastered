@@ -18,11 +18,10 @@ public class Language_manager : MonoBehaviour
             DontDestroyOnLoad(_instance);
 
 			if (JsonDataBase.isInit == false) {
-				Debug.LogWarning("JsonDataBase is not been Initialized");
+				JsonDataBase.Init();
 			}
-			else {
-				_instance.updateLanguage_data();
-			}
+
+			_instance.updateLanguage_data();
 		}
 
         return _instance;

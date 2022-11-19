@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
+using System.Threading.Tasks;
 
 public class JsonDataBase : MonoBehaviour
 {
@@ -10,37 +11,40 @@ public class JsonDataBase : MonoBehaviour
 	public static JsonData Language_datas;
 	public static JsonData Global_datas;
 
-	public static void Init(Action<string> callBack = null) {
-		CoroutineHub.GetInstance().StartCoroutine(_Init(callBack));
+	public static void Init(Action<bool> callBack = null) {
+		Task.Factory.StartNew(
+			async delegate { await _Init(); },
+			TaskCreationOptions.LongRunning
+		).Wait();
+
+		/*Task.Run(async delegate
+		{
+			// 執行非同步函式
+			await _Init();
+		}).Wait();*/
+		callBack?.Invoke(true);
+		Debug.Log("Done");
 	}
 
-	static IEnumerator _Init(Action<string> callBack) {
-		string err = "";
-		bool isLoading = false;
-		yield return 0;
-
+	static async Task<bool> _Init() {
+		await Task.Yield();
+		Debug.Log("update_data_Language");
+		bool r = await update_data_Language();
 		//Language
-		isLoading = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Language((err_) => { err = err_; isLoading = false; }));
-		yield return new WaitWhile(() => isInit);
-		if (err != "") {
-			callBack?.Invoke("error");
-			yield break;
-		}
-
+		if (!r)
+        {
+			return false;
+        }
+		Debug.Log("update_data_Global");
+		r = await update_data_Global();
 		//Global
-		isLoading = true;
-		CoroutineHub.GetInstance().StartCoroutine(update_data_Global((err_) => { err = err_; isLoading = false; }));
-		yield return new WaitWhile(() => isInit);
-		if (err != "") {
-			callBack?.Invoke("error");
-			yield break;
+		if (!r)
+		{
+			return false;
 		}
-
+		Debug.Log("isInit");
 		isInit = true;
-
-		yield return 0;
-		callBack?.Invoke("");
+		return true;
 	}
 
 	public static string GetPathByPlatform(string path) {
@@ -52,16 +56,15 @@ public class JsonDataBase : MonoBehaviour
 
 
 	//Language
-	private static IEnumerator update_data_Language(Action<string> callBack) {
+	private static async Task<bool> update_data_Language() {
 		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/LanguageData.json"));
 
-		yield return uwr.SendWebRequest();
+		await uwr.SendWebRequest();
 
 		if (uwr.isNetworkError || uwr.isHttpError) {
 			Debug.Log(uwr.error);
 			Debug.LogWarning("Language data load fail!");
-			callBack?.Invoke("error");
-			yield break;
+			return false;
 		}
 
 		string data_raw = uwr.downloadHandler.text;
@@ -71,24 +74,22 @@ public class JsonDataBase : MonoBehaviour
 		}
 		else {
 			Debug.LogWarning("Language data load fail!");
-			callBack?.Invoke("error");
-			yield break;
+			return false;
 		}
 
-		callBack?.Invoke("");
+		return true;
 	}
 
 	//Global
-	private static IEnumerator update_data_Global(Action<string> callBack) {
+	private static async Task<bool> update_data_Global() {
 		UnityEngine.Networking.UnityWebRequest uwr = UnityEngine.Networking.UnityWebRequest.Get(GetPathByPlatform(Application.streamingAssetsPath + "/data/clientData/globalValue.json"));
 
-		yield return uwr.SendWebRequest();
+		await uwr.SendWebRequest();
 
 		if (uwr.isNetworkError || uwr.isHttpError) {
 			Debug.Log(uwr.error);
 			Debug.LogWarning("Global data load fail!");
-			callBack?.Invoke("error");
-			yield break;
+			return false;
 		}
 
 		string data_raw = uwr.downloadHandler.text;
@@ -98,11 +99,10 @@ public class JsonDataBase : MonoBehaviour
 		}
 		else {
 			Debug.LogWarning("Global data load fail!");
-			callBack?.Invoke("error");
-			yield break;
+			return false;
 		}
 
-		callBack?.Invoke("");
+		return true;
 	}
 
 }
