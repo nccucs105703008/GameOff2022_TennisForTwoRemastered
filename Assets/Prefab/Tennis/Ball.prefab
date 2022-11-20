@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6737208285375531}
   m_Layer: 5
   m_Name: Ball
-  m_TagString: Untagged
+  m_TagString: TennisBall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00b06905a8ad7440a10dbc9a1bb134e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ReturnSpeed: 100
+  _ballCollider: {fileID: 4223225202717167335}
   _rigibody: {fileID: 6737208285375531}
 --- !u!222 &1512863358911805086
 CanvasRenderer:
