@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BG
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 31521509f03d9a646974ca95dcf9ad76, type: 3}
+    totalSpriteSurfaceArea: 79491331
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 53a6662058df743eb976a36a9c13c45d, type: 3}
+  - {fileID: 21300000, guid: b856b76022b764f469e6fbb2f4454b87, type: 3}
+  - {fileID: 21300000, guid: acea8d80f7a2449ecba426da1a443286, type: 3}
+  - {fileID: 21300000, guid: 8ee45451bd4b445b4bc5e5cb39b6ba46, type: 3}
+  - {fileID: 21300000, guid: 3905e2c152be248ebbbc113d80c6c602, type: 3}
+  - {fileID: 21300000, guid: a917a6f1ad6694f42bd5687d64a72218, type: 3}
+  - {fileID: 21300000, guid: d5e51102160764990a4a15c80495212a, type: 3}
+  - {fileID: 21300000, guid: 39578532511294890a0ed26f9977a550, type: 3}
+  - {fileID: 21300000, guid: 045c4a42714b74c58b28c4053d179586, type: 3}
+  - {fileID: 21300000, guid: 2f85cbd2b40d54ebd95653bc39c2b54c, type: 3}
+  - {fileID: 21300000, guid: 0f9be0f2441314f4a8bfd5853bef585a, type: 3}
+  - {fileID: 21300000, guid: 3c65ff43e74824cdd9f4a772dc0c9365, type: 3}
+  - {fileID: 21300000, guid: fbfa70537d5584a8aac3cff477b9e085, type: 3}
+  - {fileID: 21300000, guid: 7c5a519443477478183c9da473a60442, type: 3}
+  - {fileID: 21300000, guid: 5c1e2816e6af549fba932b166776e440, type: 3}
+  - {fileID: 21300000, guid: b2446736b7bc7404f910ba052aee4b00, type: 3}
+  - {fileID: 21300000, guid: 43b4ac37ce08b4b61ab414402ef73c73, type: 3}
+  - {fileID: 21300000, guid: c4592547a24ed45399dd563cfeee1df7, type: 3}
+  - {fileID: 21300000, guid: b0b65f979925249979617d68bfcaf1b3, type: 3}
+  - {fileID: 21300000, guid: f6546cb7cf8bc47af9e759088a73c57c, type: 3}
+  - {fileID: 21300000, guid: 8242d6f74d0ea4cbcabb06c0e2f3b9e5, type: 3}
+  - {fileID: 21300000, guid: 638ee398836e644f0b8162537ab38bcf, type: 3}
+  - {fileID: 21300000, guid: d381c4f8a19a2400c97945f2d9776336, type: 3}
+  - {fileID: 21300000, guid: cb42ce69ada524abdb386101dbfd1a76, type: 3}
+  - {fileID: 21300000, guid: 5bee4da9cb0b14de0b77cfd7174357f7, type: 3}
+  - {fileID: 21300000, guid: 8dcadde9fdf064a8187e9c291c388b5d, type: 3}
+  - {fileID: 21300000, guid: 2a92c55a38cb648958ea818f8a824b93, type: 3}
+  - {fileID: 21300000, guid: 3ed2fb7a8572745719a084324a04ddad, type: 3}
+  - {fileID: 21300000, guid: ee3181fa576f6784f8b12cbfa0eff8fd, type: 3}
+  - {fileID: 21300000, guid: 452e6b7baa39b4b86b40521aa87ae379, type: 3}
+  - {fileID: 21300000, guid: e57d8c8b2931c4196984a1816355fe8d, type: 3}
+  - {fileID: 21300000, guid: 6fda933dd775548f5bda6ec28a26dd1e, type: 3}
+  - {fileID: 21300000, guid: dc37048d2c7e746f2aa5430ed82da95f, type: 3}
+  - {fileID: 21300000, guid: 1325dded5c320c5418e35bf97c9b300e, type: 3}
+  - {fileID: 21300000, guid: 23cbbb4e0c8ea4826b1b2d063dd16a93, type: 3}
+  - {fileID: 21300000, guid: c031734fd59154e5a9748f7a672ac8ca, type: 3}
+  - {fileID: 21300000, guid: 282f1a9fa063f4664b19add9723b0153, type: 3}
+  - {fileID: 21300000, guid: 399a49df6d48c4439963dfcfe0127471, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - mountain2
+  - Battleground4
+  - mountain
+  - ruin6
+  - beach
+  - Battleground3
+  - chrismasTree
+  - poisonForest
+  - City2
+  - mountainTown
+  - whiteTown
+  - desert3
+  - Battleground1
+  - poisonCity
+  - ruin3
+  - ruin4
+  - beach2
+  - beach3
+  - ruin5
+  - holloweenHouse
+  - desert4
+  - cemetery
+  - City3
+  - ruin2
+  - City4
+  - desert
+  - ruin8
+  - beach4
+  - menuBG
+  - ruin7
+  - whiteForest
+  - City
+  - ruin
+  - intro
+  - desert2
+  - darkForest
+  - waterfall
+  - Battleground2
+  m_RenderDataMap: {}
+  m_Tag: BG
+  m_IsVariant: 0
