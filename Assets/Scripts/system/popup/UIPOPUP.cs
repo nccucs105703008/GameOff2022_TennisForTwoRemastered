@@ -15,6 +15,8 @@ public class UIPOPUP : baseUIView
 	public GameObject btn2;
 	public Text btn2_label;
 
+	protected Action btnCallBack = null; //OK YES
+	protected Action btnCallBack2 = null; // NO
 	btnType btn_Type = btnType.other;
 	public enum btnType {
 		ok,
@@ -23,6 +25,17 @@ public class UIPOPUP : baseUIView
 	}
 	public btnType GetBtnType() {
 		return btn_Type;
+	}
+
+	public void Setting_BtnCB(Action btnCallBack, Action btnCallBack2) {
+		this.btnCallBack += btnCallBack;
+		this.btnCallBack2 += btnCallBack2;
+	}
+	protected override void OnDisable() {
+		btnCallBack = null; //OK YES
+		btnCallBack2 = null; // NO
+		base.OnDisable();
+
 	}
 
 	public void Setting_Title_content(string title_text, string content_text) {
@@ -57,6 +70,7 @@ public class UIPOPUP : baseUIView
 
 				break;
 			case btnType.yes_no:
+				needLockClose = false;
 				if (btn1 != null) {
 					if (btn1.activeSelf == false) {
 						btn1.SetActive(true);
@@ -96,6 +110,17 @@ public class UIPOPUP : baseUIView
 		if (btn2_label != null) {
 			btn2_label.text = label2;
 			btn2_label.text = btn2_label.text.Replace("\\n", "\n");
+		}
+	}
+
+	public void pressBtn(int index) {
+		switch (index) {
+			case 0:
+				btnCallBack?.Invoke();
+				break;
+			case 1:
+				btnCallBack2?.Invoke();
+				break;
 		}
 	}
 }

@@ -11,9 +11,6 @@ public class baseUIView : MonoBehaviour
 	protected  Action closeCallBack = null;
 	protected bool onlyCloseCallBack = false;
 
-	protected Action btnCallBack = null; //OK YES
-	protected Action btnCallBack2 = null; // NO
-
     protected bool closeAndDestory = false;
 
     public Text title;
@@ -49,29 +46,12 @@ public class baseUIView : MonoBehaviour
 		pop_Type = type;
 	}
 
-	public void Setting_BtnCB(Action btnCallBack, Action btnCallBack2)
-    {
-        this.btnCallBack += btnCallBack;
-        this.btnCallBack2 += btnCallBack2;
-    }
+
 
     public void Setting_onlyCB(bool onlyOpenCallBack, bool onlyCloseCallBack)
     {
         this.onlyOpenCallBack = onlyOpenCallBack;
         this.onlyCloseCallBack = onlyCloseCallBack;
-    }
-
-    public void pressBtn(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                btnCallBack?.Invoke();
-                break;
-            case 1:
-                btnCallBack2?.Invoke();
-                break;
-        }
     }
 
     public void Setting_closeAndDestory(bool closeAndDestory)
@@ -106,7 +86,7 @@ public class baseUIView : MonoBehaviour
 
     }
     
-    public void Close()
+    public virtual void Close()
     {
         closeCallBack?.Invoke();
 
@@ -132,12 +112,10 @@ public class baseUIView : MonoBehaviour
         addToCloseManager();
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         openCallBack = null;
         closeCallBack = null;
-        btnCallBack = null; //OK YES
-        btnCallBack2 = null; // NO
 
         removeFromCloseManager();
 
