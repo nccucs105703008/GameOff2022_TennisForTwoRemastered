@@ -46,9 +46,10 @@ public class Title : MonoBehaviour
 	
 	public void OpenAchievement() {
 		//開成就視窗
+		ui_manager.GetInstance().show_achievement_window();
 	}
 
 	public void OpenMainGame() {
-
+		ui_manager.GetInstance().show_gameModeSelector_window();
 	}
 }

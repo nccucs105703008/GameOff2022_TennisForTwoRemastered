@@ -214,7 +214,55 @@ public class ui_manager : MonoBehaviour
 
 		setting_window.init();
 	}
+	public void show_achievement_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, string btnLabel1 = "", string btnLabel2 = "") {
+		if (!UI_windows.ContainsKey("achievementWindow")) {
+			UI_windows.Add("achievementWindow", new List<baseUIView>());
+		}
+		List<baseUIView> baseUIs = UI_windows["achievementWindow"];
 
+		if (baseUIs.Count == 0) {
+			baseUIs.Add(Instantiate(FileManager.LoadPrefab("achievementWindow"), Get_UILayer()).GetComponent<baseUIView>());
+		}
+		else {
+			int count = ui_manager.GetInstance().Get_UILayer().childCount;
+			baseUIs[0].transform.SetSiblingIndex(count - 1);
+		}
+		achievementWindow achievement_window = baseUIs[0] as achievementWindow;
+
+
+		achievement_window.gameObject.SetActive(false);
+
+		achievement_window.setting_btnLabel(btnLabel1, btnLabel2);
+		achievement_window.Setting_CB(openCB, closeCB);
+		achievement_window.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
+
+		achievement_window.init();
+	}
+
+	public void show_gameModeSelector_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, string btnLabel1 = "", string btnLabel2 = "") {
+		if (!UI_windows.ContainsKey("gameModeSelector")) {
+			UI_windows.Add("gameModeSelector", new List<baseUIView>());
+		}
+		List<baseUIView> baseUIs = UI_windows["gameModeSelector"];
+
+		if (baseUIs.Count == 0) {
+			baseUIs.Add(Instantiate(FileManager.LoadPrefab("gameModeSelector"), Get_UILayer()).GetComponent<baseUIView>());
+		}
+		else {
+			int count = ui_manager.GetInstance().Get_UILayer().childCount;
+			baseUIs[0].transform.SetSiblingIndex(count - 1);
+		}
+		gameModeSelector gameModeSelector = baseUIs[0] as gameModeSelector;
+
+
+		gameModeSelector.gameObject.SetActive(false);
+
+		gameModeSelector.setting_btnLabel(btnLabel1, btnLabel2);
+		gameModeSelector.Setting_CB(openCB, closeCB);
+		gameModeSelector.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
+
+		gameModeSelector.init();
+	}
 	public void closeAllUI()
     {
 

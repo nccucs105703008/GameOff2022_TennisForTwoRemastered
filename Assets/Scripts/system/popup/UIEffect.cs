@@ -8,9 +8,10 @@ public class UIEffect : MonoBehaviour
 	public AudioClip openSE;
 	public AudioClip closeSE;
 	public AudioClip warnSE;
-	public AudioClip okSE;
+	public AudioClip okSE; 
+	public AudioClip disableSE;
 
-	[Header("旋轉效果")]
+	 [Header("旋轉效果")]
 	public bool rotateSelf = false;
 	public Vector3 speed = Vector3.zero;
 
@@ -50,6 +51,15 @@ public class UIEffect : MonoBehaviour
 		}
 		else {
 			AudioManager.PlaySE("ok");
+		}
+	}
+
+	public void PlayDisableSE() {
+		if (openSE != null) {
+			AudioManager.PlaySE(disableSE);
+		}
+		else {
+			AudioManager.PlaySE("disable");
 		}
 	}
 
