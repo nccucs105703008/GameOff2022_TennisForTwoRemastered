@@ -8,7 +8,8 @@ public class ui_manager : MonoBehaviour
     static ui_manager instance;
     private GameObject UILayer;
 
-    public List<baseUIView> popup_UI_window;
+    //public List<baseUIView> popup_UI_window;
+	public Dictionary<string, List<baseUIView>> UI_windows;
 
 	public static ui_manager GetInstance()
     {
@@ -16,8 +17,8 @@ public class ui_manager : MonoBehaviour
         {
             GameObject temp = new GameObject("ui_manager");
             instance = temp.AddComponent<ui_manager>();
-            
-            instance.popup_UI_window = new List<baseUIView>();
+
+			instance.UI_windows = new Dictionary<string, List<baseUIView>>();
             DontDestroyOnLoad(instance);
             //DontDestroyOnLoad(instance.popLayer);
         }
@@ -38,7 +39,12 @@ public class ui_manager : MonoBehaviour
     //yes no type
     public void show_normal_window(string title, string content, Action yesCB, Action noCB, Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, baseUIView.popType popType = baseUIView.popType.normal, string btnLabel1 = "", string btnLabel2 = "")
     {
-        for (int i = popup_UI_window.Count - 1; i >= 0; i--) if (popup_UI_window[i] == null) popup_UI_window.RemoveAt(i);
+		if (!UI_windows.ContainsKey("normal_window")) {
+			UI_windows.Add("normal_window", new List<baseUIView>());
+		}
+		List<baseUIView> popup_UI_window = UI_windows["normal_window"];
+
+		for (int i = popup_UI_window.Count - 1; i >= 0; i--) if (popup_UI_window[i] == null) popup_UI_window.RemoveAt(i);
 
         if (popup_UI_window.Count == 0)
         {
@@ -111,6 +117,11 @@ public class ui_manager : MonoBehaviour
     //OK type
     public void show_normal_window(string title, string content, Action okCB, Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, baseUIView.popType popType = baseUIView.popType.normal, string btnLabel1 = "", string btnLabel2 = "")
     {
+		if (!UI_windows.ContainsKey("normal_window")) {
+			UI_windows.Add("normal_window", new List<baseUIView>());
+		}
+		List<baseUIView> popup_UI_window = UI_windows["normal_window"];
+
 		for (int i = popup_UI_window.Count - 1; i >= 0; i--) if (popup_UI_window[i] == null) popup_UI_window.RemoveAt(i);
 
 		if (popup_UI_window.Count == 0) {
@@ -179,12 +190,39 @@ public class ui_manager : MonoBehaviour
 			baseUIView.popup();
 		}
     }
+	public void show_setting_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, string btnLabel1 = "", string btnLabel2 = "") {
+		if (!UI_windows.ContainsKey("setting_window")) {
+			UI_windows.Add("setting_window", new List<baseUIView>());
+		}
+		List<baseUIView> baseUIs = UI_windows["setting_window"];
+
+		if (baseUIs.Count == 0) {
+			baseUIs.Add(Instantiate(FileManager.LoadPrefab("setting_window"), Get_UILayer()).GetComponent<baseUIView>());
+		}
+		else {
+			int count = ui_manager.GetInstance().Get_UILayer().childCount;
+			baseUIs[0].transform.SetSiblingIndex(count - 1);
+		}
+		settingWindow setting_window = baseUIs[0] as settingWindow;
+
+
+		setting_window.gameObject.SetActive(false);
+
+		setting_window.setting_btnLabel(btnLabel1, btnLabel2);
+		setting_window.Setting_CB(openCB, closeCB);
+		setting_window.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
+
+		setting_window.init();
+	}
 
 	public void closeAllUI()
     {
-		for (int i = popup_UI_window.Count - 1; i >= 0; i--) {
-			if (popup_UI_window[i] != null) {
-				popup_UI_window.RemoveAt(i);
+
+		foreach (KeyValuePair<string, List<baseUIView>> valuePair in UI_windows) {
+			for (int i = valuePair.Value.Count - 1; i >= 0; i--) {
+				if (valuePair.Value[i] != null) {
+					valuePair.Value[i].gameObject.SetActive(false);
+				}
 			}
 		}
 

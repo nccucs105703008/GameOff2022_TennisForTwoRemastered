@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class settingWindow : baseUIView
+public class settingWindow : UIPOPUP 
 {
     public Slider bgm_volume;
     public Slider sound_volume;
@@ -49,8 +49,7 @@ public class settingWindow : baseUIView
 
         fullscreen.isOn = resolution_manager.IsFullScreen;
 
-        Setting_CB(null, close);
-        Setting_onlyCB(false, true);
+        Setting_CB(null, null);
         popup();
         loadingManager.GetInstance().DoneLoading();
     }
@@ -64,16 +63,17 @@ public class settingWindow : baseUIView
         );
     }
 
-    public void close()
+    public override void Close()
     {
         ui_manager.GetInstance().show_normal_window(
             Language_manager.GetLanguage_value("setting_closeSettingTitle"),
             Language_manager.GetLanguage_value("setting_closeSettingContent"),
 			yesCB: () =>
             {
-                gameObject.SetActive(false);
+                base.Close();
             },
-            null
+            null,
+            popType: popType.warning
         );
     }
 

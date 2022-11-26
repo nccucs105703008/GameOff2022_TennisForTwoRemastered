@@ -18,10 +18,10 @@ public class languageManager : MonoBehaviour
         support_Language_code = new List<string>();
 
         support_Language.Add("繁體中文");
-        //support_Language.Add("English");
+        support_Language.Add("English");
 
         support_Language_code.Add("zh-TW");
-        //support_Language_code.Add("en");
+        support_Language_code.Add("en");
 
         if (LanguageSetting.Equals(""))
         {
@@ -57,9 +57,6 @@ public class languageManager : MonoBehaviour
             Language_index = 1;
         }
 
-		Language_index = 0;//temp
-
-		nowLanguage = PlayerPrefs.GetString("LanguageSetting", "");
         event_manager.Broadcast(event_manager.EventType.change_language);
     }
 }

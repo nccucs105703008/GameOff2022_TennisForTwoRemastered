@@ -121,7 +121,11 @@ public class baseUIView : MonoBehaviour
 
         if (closeAndDestory)
         {
-            ui_manager.GetInstance().popup_UI_window.Remove(this);
+			foreach (KeyValuePair<string, List<baseUIView>> baseUIs in ui_manager.GetInstance().UI_windows) {
+				if (baseUIs.Value.Contains(this)){
+					baseUIs.Value.Remove(this);
+				}
+			}
             Destroy(gameObject);
         }
     }

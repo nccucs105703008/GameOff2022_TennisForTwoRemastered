@@ -37,7 +37,18 @@ public class Title : MonoBehaviour
 			()=> { },
 			popType: baseUIView.popType.warning
 		);
+	}
 
+	public void OpenSetting() {
+		//開設定畫面
+		ui_manager.GetInstance().show_setting_window(btnLabel1:Language_manager.GetLanguage_value("menu_Setting"), btnLabel2: Language_manager.GetLanguage_value("menu_Exit"));
+	}
+	
+	public void OpenAchievement() {
+		//開成就視窗
+	}
+
+	public void OpenMainGame() {
 
 	}
 }

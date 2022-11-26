@@ -32,7 +32,10 @@ public class sceneChangeManager : MonoBehaviour
 
 	private IEnumerator work_sceneChange(string sceneName) {
 		int progress = 0;
-		CallBack += () => { loadingManager.GetInstance().DoneLoading(); CallBack = null; };
+		CallBack += () => { 
+            loadingManager.GetInstance().DoneLoading(); CallBack = null;
+            event_manager.Broadcast(event_manager.EventType.change_scene);
+        };
 		SceneManager.activeSceneChanged += (x,y) => { CallBack?.Invoke(); };
 		//背景載入
 		AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
