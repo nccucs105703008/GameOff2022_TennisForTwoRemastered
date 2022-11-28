@@ -2,53 +2,82 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
 namespace Tennis
 {
-	public class TennisPlayerController : MonoBehaviour, ITennisPlayerController
+	public class TennisPlayerController : MonoBehaviour, ITennisPlayerController, IDragHandler, IBeginDragHandler, IEndDragHandler
 	{
-		//要有一個Tracker，檢測球是否可擊球
-		[SerializeField]
-		private Button SwingBtn;
-		[SerializeField]
-		private UI_Knob DirectionKnob;
-
-		public float HitDirection { get; private set; }
-		public float HitForce { get; private set; } = 1000;
+		private float MaxForce = 2500;
 		
-		public event Action<float, float> OnHitBall;
+		public event Action<Vector2> OnHitBall;
+
+		private Vector2 _beginDrag;
+		private float _deltaTime;
+		private bool _isDrag;
+		private bool _canHitBall = true;
 
 		//可能不用
 		private TennisObserver _tenisObserver;
 
-		private void Awake()
-		{
-			SwingBtn.onClick.AddListener(OnClickSwing);
-			DirectionKnob.OnValueChanged.AddListener(OnChangeDirectionKnob);
-		}
-		private void OnDestroy()
-		{
-			SwingBtn.onClick.RemoveListener(OnClickSwing);
-			DirectionKnob.OnValueChanged.RemoveListener(OnChangeDirectionKnob);
-		}
-		private void OnClickSwing()
-		{
-			//檢查現在能否擊球
-			if (true)
+        private void Update()
+        {
+			if (_isDrag)
 			{
-				SwingRacquet(HitDirection, HitForce);
+				_deltaTime += Time.deltaTime;
 			}
-		}
-		private void OnChangeDirectionKnob(float direction)
+        }
+
+		public void SwingRacquet(Vector2 force)
 		{
-			HitDirection = DirectionKnob.transform.rotation.eulerAngles.z;
+			if (force.magnitude > MaxForce)
+			{
+				force = force.normalized * MaxForce;
+			}
+
+			OnHitBall?.Invoke(force);
 		}
 
-		public void SwingRacquet(float direction, float force)
+		public void OnDrag(PointerEventData eventData)
 		{
-			OnHitBall?.Invoke(direction, force);
 		}
-    }
+
+		void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+		{
+			if (_canHitBall)
+			{
+				_beginDrag = eventData.position;
+				_deltaTime = 0;
+				_isDrag = true;
+			}
+		}
+		void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+		{
+			if (_isDrag)
+			{
+				var endDrag = eventData.position;
+				var deltaPosition = endDrag - _beginDrag;
+				if (_deltaTime != 0)
+				{
+					deltaPosition = deltaPosition / _deltaTime;
+				}
+				_deltaTime = 0;
+				_isDrag = false;
+
+
+				Debug.Log($"{deltaPosition} delta dragged");
+
+				//如果可以擊球
+				if (true)
+				{
+					SwingRacquet(deltaPosition);
+				}
+
+				_deltaTime = 0;
+			}
+			
+		}
+	}
 }

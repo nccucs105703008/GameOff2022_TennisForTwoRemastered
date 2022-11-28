@@ -6,6 +6,7 @@ namespace Tennis
 	public class CourtBoundarySensor : MonoBehaviour
 	{
 		public event Action OnBallEnterCollision;
+		public event Action OnBallEnterTrigger;
 		public event Action OnBallExitTrigger;
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -13,6 +14,13 @@ namespace Tennis
 			if (string.Compare(collision.gameObject.tag, "TennisBall") == 0)
 			{
 				OnBallEnterCollision?.Invoke();
+			}
+		}
+		private void OnTriggerEnter2D(Collider2D collision)
+		{
+			if (string.Compare(collision.gameObject.tag, "TennisBall") == 0)
+			{
+				OnBallEnterTrigger?.Invoke();
 			}
 		}
 

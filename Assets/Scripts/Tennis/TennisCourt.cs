@@ -21,6 +21,14 @@ namespace Tennis
 		/// 出界
 		/// </summary>
 		public event Action OnExitBoundary;
+		/// <summary>
+		/// 飛入左邊的攻擊區
+		/// </summary>
+		public event Action OnEnterLeft;
+		/// <summary>
+		/// 飛入右邊的攻擊區
+		/// </summary>
+		public event Action OnEnterRight;
 
 		[SerializeField]
 		private CourtBoundarySensor _leftGround;
@@ -30,6 +38,11 @@ namespace Tennis
 		private CourtBoundarySensor _net;
 		[SerializeField]
 		private CourtBoundarySensor _boundary;
+		[SerializeField]
+		private CourtBoundarySensor _leftSpace;// { get; private set; }
+		[SerializeField]
+		private CourtBoundarySensor _rightSpace;// { get; private set; }
+
 		[SerializeField]
 		private Transform _leftServePoint;
 		[SerializeField]
@@ -43,6 +56,9 @@ namespace Tennis
 			_rightGround.OnBallEnterCollision += _onFallRightGround;
 			_net.OnBallEnterCollision += _onTouchNet;
 			_boundary.OnBallExitTrigger += _onExitBoundary;
+
+			_leftSpace.OnBallEnterTrigger += _onBallEnterLeft;
+			_rightSpace.OnBallEnterTrigger += _onBallEnterRight;
 		}
 		private void OnDestroy()
 		{
@@ -50,8 +66,13 @@ namespace Tennis
 			_rightGround.OnBallEnterCollision -= _onFallRightGround;
 			_net.OnBallEnterCollision -= _onTouchNet;
 			_boundary.OnBallExitTrigger -= _onExitBoundary;
+
+
+			_leftSpace.OnBallEnterTrigger -= _onBallEnterLeft;
+			_rightSpace.OnBallEnterTrigger -= _onBallEnterRight;
 		}
-		private void _onFallLeftGround()
+
+        private void _onFallLeftGround()
 		{
 			OnFallLeftGround?.Invoke();
 		}
@@ -66,6 +87,14 @@ namespace Tennis
 		private void _onExitBoundary()
 		{
 			OnExitBoundary?.Invoke();
+		}
+		private void _onBallEnterLeft()
+		{
+			OnEnterLeft?.Invoke();
+		}
+		private void _onBallEnterRight()
+		{
+			OnEnterRight?.Invoke();
 		}
 	}
 }

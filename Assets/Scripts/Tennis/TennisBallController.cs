@@ -42,6 +42,12 @@ namespace Tennis
 			_rigibody.AddForce(addForce, ForceMode2D.Impulse);
 			Debug.Log($"HitBall: {direction}, direction: {force}, addForce: {addForce}");
 		}
+		public void HitBall(Vector2 force)
+		{
+			var addForce = force;
+			_rigibody.AddForce(addForce, ForceMode2D.Impulse);
+			Debug.Log($"HitBall");
+		}
 		public void MoveTo(Vector3 location, bool closeSimulated = true)
 		{
 			//_ballCollider.enabled = false;

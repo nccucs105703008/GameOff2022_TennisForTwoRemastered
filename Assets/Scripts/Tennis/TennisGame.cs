@@ -10,6 +10,8 @@ namespace Tennis
 		[SerializeField]
 		private TennisPlayerController _player;
 		[SerializeField]
+		private AIPlayerController _aiPlayer;
+		[SerializeField]
 		private TennisBallController _ball;
 
 
@@ -19,15 +21,19 @@ namespace Tennis
 		private TennisCourt _courtInstance;
 
 		private ITennisPlayerController _lastAttacker;
+		private ITennisPlayerController _servePlayer;
+
+		private bool _canLeftAttack;
+		private bool _canRightAttack;
 
 		private void Awake()
 		{
 			var court = Instantiate<TennisCourt>(_court, gameObject.transform);
-			var player1 = Instantiate<TennisPlayerController>(_player, gameObject.transform);
-			var player2 = Instantiate<TennisPlayerController>(_player, gameObject.transform);
-			player2.gameObject.SetActive(false);//for debug
 			var ball = Instantiate<TennisBallController>(_ball, court.LeftServePosition, new Quaternion(), gameObject.transform);
-			InitializeGame(court, player1, player2/*Al COntroller*/, ball);
+			var player2 = Instantiate<AIPlayerController>(_aiPlayer, gameObject.transform);
+			var player1 = Instantiate<TennisPlayerController>(_player, gameObject.transform);
+
+			InitializeGame(court, player1, player2, ball);
 		}
 		private void OnDestroy()
 		{
@@ -42,7 +48,7 @@ namespace Tennis
 			_ballInstance = tennisBallController;
 			_courtInstance = court;
 
-			_lastAttacker = player1;
+			_lastAttacker = null;
 
 			_player1Instance.OnHitBall += OnPlayer1HitBall;
 			_player2Instance.OnHitBall += OnPlayer2HitBall;
@@ -50,6 +56,9 @@ namespace Tennis
 			_courtInstance.OnFallRightGround += OnFallRightGround;
 			_courtInstance.OnTouchNet += OnTouchNet;
 			_courtInstance.OnExitBoundary += OnExitBoundary;
+
+			_courtInstance.OnEnterLeft += OnEnterLeft;
+			_courtInstance.OnEnterRight += OnEnterRight;
 		}
 
 		private void Clear()
@@ -68,10 +77,13 @@ namespace Tennis
 				_courtInstance.OnFallRightGround -= OnFallRightGround;
 				_courtInstance.OnTouchNet -= OnTouchNet;
 				_courtInstance.OnExitBoundary -= OnExitBoundary;
+
+				_courtInstance.OnEnterLeft -= OnEnterLeft;
+				_courtInstance.OnEnterRight -= OnEnterRight;
 			}
 		}
 
-		public void Dispose()
+        public void Dispose()
 		{
 			Clear();
 		}
@@ -79,13 +91,20 @@ namespace Tennis
 		private void OnFallLeftGround()
 		{
 			Debug.Log($"OnFallLeftGround");
-			//JudgeTest();
+			if (_lastAttacker != null)
+			{
+				JudgeTest();
+			}
 		}
 
 		private void OnFallRightGround()
 		{
 			Debug.Log($"OnFallRightGround");
-			//JudgeTest();
+
+			if (_lastAttacker != null)
+			{
+				JudgeTest();
+			}
 		}
 
 		private void OnTouchNet()
@@ -98,20 +117,55 @@ namespace Tennis
 			Debug.Log($"OnExitBoundary");
 			JudgeTest();
 		}
-		private void OnPlayer1HitBall(float direction, float force)
+
+		private void OnEnterLeft()
 		{
-			PlayerHitBall(_player1Instance, direction, force);
+			_canLeftAttack = true;
+			_canRightAttack = false;
+			if (_player2Instance is AIPlayerController aiPlayer)
+			{
+				aiPlayer.SetActive(false);
+			}
+			//允許左邊攻擊
+			Debug.Log($"OnEnterLeft");
 		}
-		private void OnPlayer2HitBall(float direction, float force)
+
+		private void OnEnterRight()
 		{
-			PlayerHitBall(_player2Instance, direction, force);
+			_canLeftAttack = false;
+			_canRightAttack = true;
+			if (_player2Instance is AIPlayerController aiPlayer)
+			{
+				aiPlayer.SetActive(true);
+			}
+			//允許右邊攻擊
+			Debug.Log($"OnEnterRight");
 		}
-		private void PlayerHitBall(ITennisPlayerController player, float direction, float force)
+		private void OnPlayer1HitBall(Vector2 force)
 		{
-			//切換攻擊方資料
-			_lastAttacker = player;
-			//擊球
-			_ballInstance?.HitBall(direction, force);
+			if (_canLeftAttack)
+			{
+				PlayerHitBall(_player1Instance, force);
+			}
+		}
+		
+		private void OnPlayer2HitBall(Vector2 force)
+		{
+			if (_canRightAttack)
+			{
+				PlayerHitBall(_player2Instance, force);
+			}
+		}
+		private void PlayerHitBall(ITennisPlayerController player, Vector2 force)
+		{
+			//不可連續擊球
+			if (_lastAttacker != player)
+			{
+				//切換攻擊方資料
+				_lastAttacker = player;
+				//擊球
+				_ballInstance?.HitBall(force);
+			}
 		}
 		private void JudgeTest()
 		{
@@ -124,6 +178,20 @@ namespace Tennis
 			{
 				servePosition = _courtInstance.LeftServePosition;
 			}
+			if (_lastAttacker == null)
+			{
+				if (_servePlayer == _player1Instance)
+				{
+					servePosition = _courtInstance.RightServePosition;
+				}
+				else
+				{
+					servePosition = _courtInstance.RightServePosition;
+				}
+			}
+			_canLeftAttack = false;
+			_canRightAttack = false;
+			_lastAttacker = null;
 			_ballInstance.MoveTo(servePosition);
 		}
 	}

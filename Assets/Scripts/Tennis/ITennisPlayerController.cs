@@ -1,10 +1,11 @@
 using System;
+using UnityEngine;
 
 namespace Tennis
 {
 	public interface ITennisPlayerController
 	{
-		event Action<float, float> OnHitBall;
-		void SwingRacquet(float direction, float force);
+		event Action<Vector2> OnHitBall;
+		void SwingRacquet(Vector2 force);
 	}
 }
