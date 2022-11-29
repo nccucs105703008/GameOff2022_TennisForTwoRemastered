@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,7 +59,8 @@ public class Title : MonoBehaviour
 		ui_manager.GetInstance().show_gameModeSelector_window();
 	}
 
-	public void RunShowBtnFeedBack() {
+	public async void RunShowBtnFeedBack() {
+		await UniTask.DelayFrame(10);
 		ShowBtnFeedback.PlayFeedbacks();
 	}
 }
