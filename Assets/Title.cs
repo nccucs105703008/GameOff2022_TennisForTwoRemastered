@@ -1,3 +1,4 @@
+using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +7,17 @@ public class Title : MonoBehaviour
 {
 	private static Title _instance;
 
-	public static Title GetInstance() {
+	[Header("Feedbacks")]
+	public MMF_Player ShowBtnFeedback;
+
+    public static Title GetInstance() {
 		return _instance;
 	}
 
 	private void Awake() {
 		_instance = this;
 		init();
+		RunShowBtnFeedBack();
 	}
 
 	void init() {
@@ -51,5 +56,9 @@ public class Title : MonoBehaviour
 
 	public void OpenMainGame() {
 		ui_manager.GetInstance().show_gameModeSelector_window();
+	}
+
+	public void RunShowBtnFeedBack() {
+		ShowBtnFeedback.PlayFeedbacks();
 	}
 }
