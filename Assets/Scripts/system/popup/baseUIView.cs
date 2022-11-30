@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using MoreMountains.Feedbacks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +23,10 @@ public class baseUIView : MonoBehaviour
 	public AudioClip closeSE;
 	public bool disableOpenSE =false ;
 	public bool disableCloseSE = false ;
+
+	[Header("Feedbacks")]
+	public MMF_Player OpenFeedback;
+	public MMF_Player CloseFeedback;
 
 	public enum popType
 	{
@@ -60,8 +66,8 @@ public class baseUIView : MonoBehaviour
     }
 
     public void popup()
-    {
-        openCallBack?.Invoke();
+    {	
+		openCallBack?.Invoke();
 
 		if (onlyOpenCallBack) {
 			return;
@@ -84,11 +90,20 @@ public class baseUIView : MonoBehaviour
 			}			
 		}
 
-    }
+		if (OpenFeedback != null) {
+			OpenFeedback.PlayFeedbacks();
+		}
+
+	}
     
-    public virtual void Close()
+    public virtual async void Close()
     {
-        closeCallBack?.Invoke();
+		if (CloseFeedback != null) {
+			CloseFeedback.PlayFeedbacks();
+			await UniTask.DelayFrame(50);
+		}
+
+		 closeCallBack?.Invoke();
 
 		if (onlyCloseCallBack) {
 			return;

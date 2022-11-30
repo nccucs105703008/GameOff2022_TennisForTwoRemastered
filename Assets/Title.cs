@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +8,17 @@ public class Title : MonoBehaviour
 {
 	private static Title _instance;
 
-	public static Title GetInstance() {
+	[Header("Feedbacks")]
+	public MMF_Player ShowBtnFeedback;
+
+    public static Title GetInstance() {
 		return _instance;
 	}
 
 	private void Awake() {
 		_instance = this;
 		init();
+		RunShowBtnFeedBack();
 	}
 
 	void init() {
@@ -53,5 +59,10 @@ public class Title : MonoBehaviour
 		ui_manager.GetInstance().show_gameModeSelector_window();
 		//ui_manager.GetInstance().show_pause_window();
 		//ui_manager.GetInstance().show_gameResult_window();
+	}
+
+	public async void RunShowBtnFeedBack() {
+		await UniTask.DelayFrame(10);
+		ShowBtnFeedback.PlayFeedbacks();
 	}
 }
