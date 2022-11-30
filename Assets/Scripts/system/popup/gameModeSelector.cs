@@ -21,4 +21,9 @@ public class gameModeSelector : UIPOPUP
         popup();
         loadingManager.GetInstance().DoneLoading();
     }
+    public void OnSelectNormalMode()
+    {
+        sceneChangeManager.GetInstance().changeScene("TennisGame");
+        Close();
+    }
 }

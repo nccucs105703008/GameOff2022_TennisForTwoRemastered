@@ -145,11 +145,11 @@ namespace Tennis
 			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Left)
 			{
-				JudgeTest(_attacker);
+				Adjudicate(_attacker);
 			}
 			else
 			{
-				JudgeTest(_defender);
+				Adjudicate(_defender);
 			}
 		}
 
@@ -158,11 +158,11 @@ namespace Tennis
 			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Right)
 			{
-				JudgeTest(_attacker);
+				Adjudicate(_attacker);
 			}
 			else
 			{
-				JudgeTest(_defender);
+				Adjudicate(_defender);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace Tennis
 
 		private void OnExitBoundary()
 		{
-			JudgeTest(_defender);
+			Adjudicate(_defender);
 		}
 
 		private void OnEnterLeft()
@@ -217,7 +217,10 @@ namespace Tennis
 				AudioManager.PlaySE("HitBall");
 			}
 		}
-		private void JudgeTest(Player scorer)
+		/// <summary>
+		/// 判定得分
+		/// </summary>
+		private void Adjudicate(Player scorer)
 		{
 			if (!_isFighting)
 			{
@@ -240,13 +243,8 @@ namespace Tennis
 			}
 
 			Debug.Log($"CurrentPoint: {LeftPoint}:{RightPoint}");
-			//獨立出去
-			if (_attacker != Player.None)
-			{
-				_canLeftAttack = false;
-				_canRightAttack = false;
-				_attacker = Player.None;
-			}
+			
+			ResetAttacker();
 
 			if (LeftPoint >= GamePoint)
 			{
@@ -262,12 +260,16 @@ namespace Tennis
 				_ballInstance.MoveTo(servePosition);
 			}
 		}
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.J))
-            {
 
+		private void ResetAttacker()
+		{
+			if (_attacker == Player.None)
+			{
+				return;
 			}
-        }
+			_canLeftAttack = false;
+			_canRightAttack = false;
+			_attacker = Player.None;
+		}
     }
 }
