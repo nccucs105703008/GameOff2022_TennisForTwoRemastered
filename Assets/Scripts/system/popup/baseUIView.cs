@@ -98,9 +98,18 @@ public class baseUIView : MonoBehaviour
     
     public virtual async void Close()
     {
+		if (!disableCloseSE) {
+			if (closeSE != null) {
+				AudioManager.PlaySE(closeSE);
+			}
+			else {
+				AudioManager.PlaySE("cancel");
+			}
+		}
+
 		if (CloseFeedback != null) {
 			CloseFeedback.PlayFeedbacks();
-			await UniTask.DelayFrame(50);
+			await UniTask.DelayFrame(20);
 		}
 
 		 closeCallBack?.Invoke();
@@ -109,16 +118,7 @@ public class baseUIView : MonoBehaviour
 			return;
 		} else {
 			gameObject.SetActive(false);
-		}
-
-		if (!disableCloseSE) {
-			if(closeSE != null) {
-				AudioManager.PlaySE(closeSE);
-			}
-			else {
-				AudioManager.PlaySE("cancel");
-			}
-		}
+		}	
 
 	}
 

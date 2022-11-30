@@ -1,5 +1,8 @@
+using MoreMountains.Feedbacks;
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tennis
 {
@@ -13,6 +16,14 @@ namespace Tennis
 		private AIPlayerController _aiPlayer;
 		[SerializeField]
 		private TennisBallController _ball;
+
+		[Header("Score")]
+		public Text _leftScore;
+		public Text _rightScore;
+
+		[Header("Feedbacks")]
+		public MMF_Player _leftScoreFeedback;
+		public MMF_Player _rightScoreFeedback;
 
 		private ITennisPlayerController _player1Instance;
 		private ITennisPlayerController _player2Instance;
@@ -232,11 +243,15 @@ namespace Tennis
 			{
 				case Player.Left:
 					LeftPoint++;
+					_leftScore.text = LeftPoint.ToString();
+					_leftScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.LeftServePosition;
 					_servePlayer = scorer;
 					break;
 				case Player.Right:
 					RightPoint++;
+					_rightScore.text = RightPoint.ToString();
+					_rightScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.RightServePosition;
 					_servePlayer = scorer;
 					break;
