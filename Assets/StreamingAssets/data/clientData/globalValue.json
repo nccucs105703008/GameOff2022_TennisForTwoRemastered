@@ -1,1 +1,1 @@
-[{"key":"test","value":0},{"key":"test2","value":"XD"},{"key":"storyCharacterWaitTime","value":0.05},{"key":"storyLineWaitTime","value":0.2},{"key":"EndBackToMenuTime","value":10}]
+[{"key":"test","value":0},{"key":"test2","value":"XD"},{"key":"storyCharacterWaitTime","value":0.05},{"key":"storyLineWaitTime","value":0.2},{"key":"EndBackToMenuTime","value":10},{"key":"PlayerSwingCoolDown","value":1},{"key":"GamePoint","value":10}]

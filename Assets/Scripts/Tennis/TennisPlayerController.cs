@@ -17,7 +17,7 @@ namespace Tennis
 		/// </summary>
 		public float CoolDownTime => SwingCoolDown - _coolDownUpdateTime;
 
-		private bool _canHitBall = true;
+		private bool _canHitBall;
 
 		private Vector2 _beginDrag;
 		private float _dragTime;
@@ -25,8 +25,14 @@ namespace Tennis
 
 		public event Action<Vector2> OnHitBall;
 
-        private void Update()
-        {
+		public void Initialize(float swingCoolDown)
+		{
+			SwingCoolDown = swingCoolDown;
+			_coolDownUpdateTime = swingCoolDown;
+			_canHitBall = true;
+		}
+		private void Update()
+		{
 			if (!_canHitBall)
 			{
 				_coolDownUpdateTime += Time.deltaTime;
@@ -40,7 +46,7 @@ namespace Tennis
 			{
 				_dragTime += Time.deltaTime;
 			}
-        }
+		}
 
 		public void SwingRacquet(Vector2 force)
 		{

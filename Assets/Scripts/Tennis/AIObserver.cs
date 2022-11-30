@@ -79,25 +79,17 @@ namespace Tennis
 		public Vector3 GetHitVector()
 		{
 			var ballPosition = _tennisBall.transform.position;
-			Debug.Log($"ballPosition: {ballPosition}");
+			//Debug.Log($"ballPosition: {ballPosition}");
 			var targetPosition = GetRandomTarget();
-			Debug.Log($"targetPosition: {targetPosition}");
+			//Debug.Log($"targetPosition: {targetPosition}");
 			var hitVector = (targetPosition - ballPosition).normalized;
-			Debug.Log($"hitVertor: {hitVector}");
+			//Debug.Log($"hitVertor: {hitVector}");
 
 			return hitVector;
 		}
 		private Vector3 GetRandomTarget()
 		{
 			var targetSpace = _isInLowSpace ? _lowTargetSpace : _highTargetSpace;
-			if (_isInLowSpace)
-			{
-				Debug.Log("Ai Hit _lowTargetSpace");
-			}
-			else
-			{
-				Debug.Log("Ai Hit _highTargetSpace");
-			}
 
 			if (targetSpace != null)
 			{
@@ -114,7 +106,6 @@ namespace Tennis
 		public float GetBallSpeed()
 		{
 			var rigibody = _tennisBall.GetComponent<Rigidbody2D>();
-			Debug.Log($"ball speed {rigibody.velocity}");
 
 			return rigibody.velocity.magnitude;
 		}

@@ -36,13 +36,13 @@ namespace Tennis
 				return Player.None;
 			}
 		}
-		
+
 
 		private bool _canLeftAttack;
 		private bool _canRightAttack;
 		private bool _isFighting;
 
-		public readonly int GamePoint = 10;
+		public int GamePoint { get; private set; }
 		public int LeftPoint { get; private set; }
 		public int RightPoint { get; private set; }
 
@@ -50,6 +50,7 @@ namespace Tennis
 
 		private void Awake()
 		{
+			GamePoint = GlobalValueManager.Get_value<int>("GamePoint", 10);
 			Restart();
 		}
 		private void OnDestroy()
@@ -62,7 +63,11 @@ namespace Tennis
 			var ball = _ballInstance != null ? _ballInstance : Instantiate<TennisBallController>(_ball, court.LeftServePosition, new Quaternion(), gameObject.transform);
 			var player1 = _player1Instance != null ? _player1Instance : Instantiate<TennisPlayerController>(_player, gameObject.transform);
 			var player2 = _player2Instance != null ? _player2Instance : Instantiate<AIPlayerController>(_aiPlayer, gameObject.transform);
-
+			if (player1 is TennisPlayerController player)
+			{
+				var swingCoolDown = GlobalValueManager.Get_value<float>("PlayerSwingCoolDown", 1f);
+				player.Initialize(swingCoolDown);
+			}
 			if (player2 is AIPlayerController aIPlayer)
 			{
 				var aiObserver = court.GetComponentInChildren<AIObserver>();
@@ -137,7 +142,6 @@ namespace Tennis
 
 		private void OnFallLeftGround()
 		{
-			Debug.Log($"OnFallLeftGround");
 			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Left)
 			{
@@ -145,16 +149,12 @@ namespace Tennis
 			}
 			else
 			{
-				//如果是發球，重發
-
-				//如果不是發球，對面得分
 				JudgeTest(_defender);
 			}
 		}
 
 		private void OnFallRightGround()
 		{
-			Debug.Log($"OnFallRightGround");
 			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Right)
 			{
@@ -162,16 +162,12 @@ namespace Tennis
 			}
 			else
 			{
-				//如果是發球，重發
-
-				//如果不是發球，對面得分
 				JudgeTest(_defender);
 			}
 		}
 
 		private void OnTouchNet()
 		{
-			Debug.Log($"OnTouchNet");
 		}
 
 		private void OnExitBoundary()
@@ -216,9 +212,7 @@ namespace Tennis
 			//不可連續擊球
 			if (_attacker != attacker)
 			{
-				//切換攻擊方資料
 				_attacker = attacker;
-				//擊球
 				_ballInstance?.HitBall(force);
 				AudioManager.PlaySE("HitBall");
 			}
@@ -268,5 +262,12 @@ namespace Tennis
 				_ballInstance.MoveTo(servePosition);
 			}
 		}
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.J))
+            {
+
+			}
+        }
     }
 }

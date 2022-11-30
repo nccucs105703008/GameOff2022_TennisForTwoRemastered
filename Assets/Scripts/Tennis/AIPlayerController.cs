@@ -39,6 +39,7 @@ namespace Tennis
 
 		public void Initialize(AIObserver aiObserver, float intervalTime, float swingProbability)
 		{
+			Clear();
 			_aiObserver = aiObserver;
 			_aiObserver.OnBallEnter += OnBallEnterTrigger;
 			_aiObserver.OnBallExit += OnBallExitTrigger;
@@ -58,15 +59,12 @@ namespace Tennis
 		private void OnBallEnterTrigger()
 		{
 			_canHitBall = true;
-			Debug.Log("AI player OnBallEnterTrigger");
 		}
 
 		private void OnBallExitTrigger()
 		{
 			_canHitBall = false;
-			Debug.Log("AI player OnBallExitTrigger");
 		}
-
 
 		private void Update()
 		{
@@ -106,12 +104,7 @@ namespace Tennis
 			var p = UnityEngine.Random.Range(0.0f, 1.0f);
 			if (p > SwingProbability)
 			{
-				Debug.Log("AI HitBall Fail");
 				return;
-			}
-			else
-			{
-				Debug.Log("AI HitBall");
 			}
 
 			if (force.magnitude > MaxForce)
@@ -121,6 +114,5 @@ namespace Tennis
 
 			OnHitBall?.Invoke(force);
 		}
-
 	}
 }
