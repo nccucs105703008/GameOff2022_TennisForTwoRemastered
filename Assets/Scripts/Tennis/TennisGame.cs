@@ -50,22 +50,28 @@ namespace Tennis
 
 		private void Awake()
 		{
-			var court = Instantiate<TennisCourt>(_court, gameObject.transform);
-			var ball = Instantiate<TennisBallController>(_ball, court.LeftServePosition, new Quaternion(), gameObject.transform);
-			var player2 = Instantiate<AIPlayerController>(_aiPlayer, gameObject.transform);
-			var player1 = Instantiate<TennisPlayerController>(_player, gameObject.transform);
-
-			var aiObserver = court.GetComponentInChildren<AIObserver>();
-			aiObserver.Initialize(ball);
-			player2.Initialize(aiObserver, 0.75f, 0.5f);
-
-			InitializeGame(court, player1, player2, ball);
+			Restart();
 		}
 		private void OnDestroy()
 		{
 			Dispose();
 		}
+		public void Restart()
+		{
+			var court = _courtInstance != null ? _courtInstance : Instantiate<TennisCourt>(_court, gameObject.transform);
+			var ball = _ballInstance != null ? _ballInstance : Instantiate<TennisBallController>(_ball, court.LeftServePosition, new Quaternion(), gameObject.transform);
+			var player1 = _player1Instance != null ? _player1Instance : Instantiate<TennisPlayerController>(_player, gameObject.transform);
+			var player2 = _player2Instance != null ? _player2Instance : Instantiate<AIPlayerController>(_aiPlayer, gameObject.transform);
 
+			if (player2 is AIPlayerController aIPlayer)
+			{
+				var aiObserver = court.GetComponentInChildren<AIObserver>();
+				aiObserver.Initialize(ball);
+				aIPlayer.Initialize(aiObserver, 0.75f, 0.5f);
+			}
+
+			InitializeGame(court, player1, player2, ball);
+		}
 		public void InitializeGame(TennisCourt court, ITennisPlayerController player1, ITennisPlayerController player2, TennisBallController tennisBallController)
 		{
 			Clear();
@@ -85,9 +91,6 @@ namespace Tennis
 
 			_courtInstance.OnEnterLeft += OnEnterLeft;
 			_courtInstance.OnEnterRight += OnEnterRight;
-
-			_servePlayer = Player.Left;
-			_attacker = Player.None;
 
 			_ballInstance.MoveTo(court.LeftServePosition);
 		}
@@ -116,7 +119,15 @@ namespace Tennis
 				_courtInstance.OnEnterLeft -= OnEnterLeft;
 				_courtInstance.OnEnterRight -= OnEnterRight;
 			}
+
+			_servePlayer = Player.Left;
+			_attacker = Player.None;
+			_canLeftAttack = false;
+			_canRightAttack = false;
 			_isFighting = false;
+
+			LeftPoint = 0;
+			RightPoint = 0;
 		}
 
 		public void Dispose()
@@ -127,6 +138,7 @@ namespace Tennis
 		private void OnFallLeftGround()
 		{
 			Debug.Log($"OnFallLeftGround");
+			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Left)
 			{
 				JudgeTest(_attacker);
@@ -143,7 +155,7 @@ namespace Tennis
 		private void OnFallRightGround()
 		{
 			Debug.Log($"OnFallRightGround");
-
+			AudioManager.PlaySE("TennisBall");
 			if (_attacker != Player.Right)
 			{
 				JudgeTest(_attacker);
@@ -208,6 +220,7 @@ namespace Tennis
 				_attacker = attacker;
 				//À»²y
 				_ballInstance?.HitBall(force);
+				AudioManager.PlaySE("HitBall");
 			}
 		}
 		private void JudgeTest(Player scorer)
@@ -255,5 +268,5 @@ namespace Tennis
 				_ballInstance.MoveTo(servePosition);
 			}
 		}
-	}
+    }
 }
