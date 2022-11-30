@@ -6,9 +6,12 @@ namespace Tennis
 	public class AIPlayerController : MonoBehaviour, ITennisPlayerController
 	{
 		public event Action<Vector2> OnHitBall;
+
+		public float MaxForce = 4000;
 		public Vector2 HitForce { get; private set; } =  new Vector2(-900,900);
 
-		private bool _canHitBall = true;
+		private AIObserver _aiObserver;
+		private bool _canHitBall;
 		public float IntervalTime = 0.75f;
 		private float _swingProbability = 0.5f;
 		public float SwingProbability 
@@ -34,15 +37,36 @@ namespace Tennis
 		}
 		private float _actionTime;
 
-		public void Initialize(float intervalTime, float swingProbability)
+		public void Initialize(AIObserver aiObserver, float intervalTime, float swingProbability)
 		{
+			_aiObserver = aiObserver;
+			_aiObserver.OnBallEnter += OnBallEnterTrigger;
+			_aiObserver.OnBallExit += OnBallExitTrigger;
+
 			IntervalTime = intervalTime;
 			SwingProbability = swingProbability;
 		}
-		public void SetActive(bool isAIActive)
+		private void Clear()
 		{
-			_canHitBall = isAIActive;
+			if (_aiObserver != null)
+			{
+				_aiObserver.OnBallEnter -= OnBallEnterTrigger;
+				_aiObserver.OnBallExit -= OnBallExitTrigger;
+			}
 		}
+
+		private void OnBallEnterTrigger()
+		{
+			_canHitBall = true;
+			Debug.Log("AI player OnBallEnterTrigger");
+		}
+
+		private void OnBallExitTrigger()
+		{
+			_canHitBall = false;
+			Debug.Log("AI player OnBallExitTrigger");
+		}
+
 
 		private void Update()
 		{
@@ -52,24 +76,50 @@ namespace Tennis
 				if (_actionTime >= IntervalTime)
 				{
 					_actionTime = 0;
-					SwingRacquet(HitForce);
+					var hitVector = _aiObserver.GetHitVector();
+					var ballSpeed = _aiObserver.GetBallSpeed();
+					var force = 1000;
+					if (ballSpeed > 100)
+					{
+						force = 3000;
+					}
+					else if (ballSpeed > 50)
+					{
+						force = 2500;
+					}
+					else if (ballSpeed > 20)
+					{
+						force = 1250;
+					}
+
+					SwingRacquet(hitVector * force);
 				}
 			}
 		}
 
 		public void SwingRacquet(Vector2 force)
 		{
-			var p = UnityEngine.Random.Range(0.0f, 1.0f);
-			if (p < SwingProbability)
+			if (!_canHitBall)
 			{
-				OnHitBall?.Invoke(force);
-				Debug.Log("AI HitBall");
+				return;
+			}
+			var p = UnityEngine.Random.Range(0.0f, 1.0f);
+			if (p > SwingProbability)
+			{
+				Debug.Log("AI HitBall Fail");
+				return;
 			}
 			else
 			{
-				Debug.Log("AI HitBall Fail");
+				Debug.Log("AI HitBall");
 			}
 
+			if (force.magnitude > MaxForce)
+			{
+				force = force.normalized * MaxForce;
+			}
+
+			OnHitBall?.Invoke(force);
 		}
 
 	}

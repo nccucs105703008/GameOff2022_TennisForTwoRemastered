@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Tennis
 		private bool _isMoving;
 		private Vector3 _targetPosition;
 
+		public event Action OnMoveDone;
+
 		private void Start()
 		{
 			_rigibody = gameObject.GetComponent<Rigidbody2D>();
@@ -31,6 +34,7 @@ namespace Tennis
 					//_ballCollider.enabled = true;
 					_rigibody.simulated = true;
 					_isMoving = false;
+					OnMoveDone?.Invoke();
 				}
 			}
 		}
@@ -50,6 +54,8 @@ namespace Tennis
 		}
 		public void MoveTo(Vector3 location, bool closeSimulated = true)
 		{
+			//不需要Z軸的資料
+			location.z = transform.position.z;
 			//_ballCollider.enabled = false;
 			_rigibody.simulated = !closeSimulated;
 			_isMoving = true;

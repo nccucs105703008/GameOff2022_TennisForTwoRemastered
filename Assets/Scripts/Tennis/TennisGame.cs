@@ -14,17 +14,39 @@ namespace Tennis
 		[SerializeField]
 		private TennisBallController _ball;
 
-
 		private ITennisPlayerController _player1Instance;
 		private ITennisPlayerController _player2Instance;
 		private TennisBallController _ballInstance;
 		private TennisCourt _courtInstance;
 
-		private ITennisPlayerController _lastAttacker;
-		private ITennisPlayerController _servePlayer;
+		private Player _servePlayer;
+		private Player _attacker;
+		private Player _defender
+		{
+			get
+			{
+				if (_attacker == Player.Left)
+				{
+					return Player.Right;
+				}
+				else if (_attacker == Player.Right)
+				{
+					return Player.Left;
+				}
+				return Player.None;
+			}
+		}
+		
 
 		private bool _canLeftAttack;
 		private bool _canRightAttack;
+		private bool _isFighting;
+
+		public readonly int GamePoint = 10;
+		public int LeftPoint { get; private set; }
+		public int RightPoint { get; private set; }
+
+		public event Action OnGameSet;
 
 		private void Awake()
 		{
@@ -32,6 +54,10 @@ namespace Tennis
 			var ball = Instantiate<TennisBallController>(_ball, court.LeftServePosition, new Quaternion(), gameObject.transform);
 			var player2 = Instantiate<AIPlayerController>(_aiPlayer, gameObject.transform);
 			var player1 = Instantiate<TennisPlayerController>(_player, gameObject.transform);
+
+			var aiObserver = court.GetComponentInChildren<AIObserver>();
+			aiObserver.Initialize(ball);
+			player2.Initialize(aiObserver, 0.75f, 0.5f);
 
 			InitializeGame(court, player1, player2, ball);
 		}
@@ -48,10 +74,10 @@ namespace Tennis
 			_ballInstance = tennisBallController;
 			_courtInstance = court;
 
-			_lastAttacker = null;
-
 			_player1Instance.OnHitBall += OnPlayer1HitBall;
 			_player2Instance.OnHitBall += OnPlayer2HitBall;
+			_ballInstance.OnMoveDone += OnBallMoveDone;
+
 			_courtInstance.OnFallLeftGround += OnFallLeftGround;
 			_courtInstance.OnFallRightGround += OnFallRightGround;
 			_courtInstance.OnTouchNet += OnTouchNet;
@@ -59,6 +85,11 @@ namespace Tennis
 
 			_courtInstance.OnEnterLeft += OnEnterLeft;
 			_courtInstance.OnEnterRight += OnEnterRight;
+
+			_servePlayer = Player.Left;
+			_attacker = Player.None;
+
+			_ballInstance.MoveTo(court.LeftServePosition);
 		}
 
 		private void Clear()
@@ -67,9 +98,13 @@ namespace Tennis
 			{
 				_player1Instance.OnHitBall -= OnPlayer1HitBall;
 			}
-			if (_player1Instance != null)
+			if (_player2Instance != null)
 			{
 				_player2Instance.OnHitBall -= OnPlayer2HitBall;
+			}
+			if (_ballInstance != null)
+			{
+				_ballInstance.OnMoveDone -= OnBallMoveDone;
 			}
 			if (_courtInstance != null)
 			{
@@ -81,9 +116,10 @@ namespace Tennis
 				_courtInstance.OnEnterLeft -= OnEnterLeft;
 				_courtInstance.OnEnterRight -= OnEnterRight;
 			}
+			_isFighting = false;
 		}
 
-        public void Dispose()
+		public void Dispose()
 		{
 			Clear();
 		}
@@ -91,9 +127,16 @@ namespace Tennis
 		private void OnFallLeftGround()
 		{
 			Debug.Log($"OnFallLeftGround");
-			if (_lastAttacker != null)
+			if (_attacker != Player.Left)
 			{
-				JudgeTest();
+				JudgeTest(_attacker);
+			}
+			else
+			{
+				//如果是發球，重發
+
+				//如果不是發球，對面得分
+				JudgeTest(_defender);
 			}
 		}
 
@@ -101,9 +144,16 @@ namespace Tennis
 		{
 			Debug.Log($"OnFallRightGround");
 
-			if (_lastAttacker != null)
+			if (_attacker != Player.Right)
 			{
-				JudgeTest();
+				JudgeTest(_attacker);
+			}
+			else
+			{
+				//如果是發球，重發
+
+				//如果不是發球，對面得分
+				JudgeTest(_defender);
 			}
 		}
 
@@ -114,38 +164,27 @@ namespace Tennis
 
 		private void OnExitBoundary()
 		{
-			Debug.Log($"OnExitBoundary");
-			JudgeTest();
+			JudgeTest(_defender);
 		}
 
 		private void OnEnterLeft()
 		{
 			_canLeftAttack = true;
 			_canRightAttack = false;
-			if (_player2Instance is AIPlayerController aiPlayer)
-			{
-				aiPlayer.SetActive(false);
-			}
 			//允許左邊攻擊
-			Debug.Log($"OnEnterLeft");
 		}
 
 		private void OnEnterRight()
 		{
 			_canLeftAttack = false;
 			_canRightAttack = true;
-			if (_player2Instance is AIPlayerController aiPlayer)
-			{
-				aiPlayer.SetActive(true);
-			}
 			//允許右邊攻擊
-			Debug.Log($"OnEnterRight");
 		}
 		private void OnPlayer1HitBall(Vector2 force)
 		{
 			if (_canLeftAttack)
 			{
-				PlayerHitBall(_player1Instance, force);
+				PlayerHitBall(Player.Left, force);
 			}
 		}
 		
@@ -153,46 +192,68 @@ namespace Tennis
 		{
 			if (_canRightAttack)
 			{
-				PlayerHitBall(_player2Instance, force);
+				PlayerHitBall(Player.Right, force);
 			}
 		}
-		private void PlayerHitBall(ITennisPlayerController player, Vector2 force)
+		private void OnBallMoveDone()
+		{
+			_isFighting = true;
+		}
+		private void PlayerHitBall(Player attacker, Vector2 force)
 		{
 			//不可連續擊球
-			if (_lastAttacker != player)
+			if (_attacker != attacker)
 			{
 				//切換攻擊方資料
-				_lastAttacker = player;
+				_attacker = attacker;
 				//擊球
 				_ballInstance?.HitBall(force);
 			}
 		}
-		private void JudgeTest()
+		private void JudgeTest(Player scorer)
 		{
-			Vector3 servePosition = new Vector3(0, 0, 0);
-			if (_lastAttacker == _player1Instance)
+			if (!_isFighting)
 			{
-				servePosition = _courtInstance.RightServePosition;
+				return;
 			}
-			else if (_lastAttacker == _player2Instance)
+			Vector3 servePosition = _servePlayer == Player.Left ? _courtInstance.LeftServePosition : _courtInstance.RightServePosition;
+
+			switch (scorer)
 			{
-				servePosition = _courtInstance.LeftServePosition;
-			}
-			if (_lastAttacker == null)
-			{
-				if (_servePlayer == _player1Instance)
-				{
+				case Player.Left:
+					LeftPoint++;
+					servePosition = _courtInstance.LeftServePosition;
+					_servePlayer = scorer;
+					break;
+				case Player.Right:
+					RightPoint++;
 					servePosition = _courtInstance.RightServePosition;
-				}
-				else
-				{
-					servePosition = _courtInstance.RightServePosition;
-				}
+					_servePlayer = scorer;
+					break;
 			}
-			_canLeftAttack = false;
-			_canRightAttack = false;
-			_lastAttacker = null;
-			_ballInstance.MoveTo(servePosition);
+
+			Debug.Log($"CurrentPoint: {LeftPoint}:{RightPoint}");
+			//獨立出去
+			if (_attacker != Player.None)
+			{
+				_canLeftAttack = false;
+				_canRightAttack = false;
+				_attacker = Player.None;
+			}
+
+			if (LeftPoint >= GamePoint)
+			{
+				OnGameSet?.Invoke();
+			}
+			else if (RightPoint >= GamePoint)
+			{
+				OnGameSet?.Invoke();
+			}
+			else
+			{
+				_isFighting = false;
+				_ballInstance.MoveTo(servePosition);
+			}
 		}
 	}
 }

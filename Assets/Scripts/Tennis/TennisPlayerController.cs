@@ -1,46 +1,69 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
 
 namespace Tennis
 {
 	public class TennisPlayerController : MonoBehaviour, ITennisPlayerController, IDragHandler, IBeginDragHandler, IEndDragHandler
 	{
 		private float MaxForce = 2500;
-		
-		public event Action<Vector2> OnHitBall;
+		/// <summary>
+		/// 揮拍冷卻時間
+		/// </summary>
+		public float SwingCoolDown;
+		private float _coolDownUpdateTime;
+		/// <summary>
+		/// 當前冷卻時間
+		/// </summary>
+		public float CoolDownTime => SwingCoolDown - _coolDownUpdateTime;
 
-		private Vector2 _beginDrag;
-		private float _deltaTime;
-		private bool _isDrag;
 		private bool _canHitBall = true;
 
-		//可能不用
-		private TennisObserver _tenisObserver;
+		private Vector2 _beginDrag;
+		private float _dragTime;
+		private bool _isDrag;
+
+		public event Action<Vector2> OnHitBall;
 
         private void Update()
         {
-			if (_isDrag)
+			if (!_canHitBall)
 			{
-				_deltaTime += Time.deltaTime;
+				_coolDownUpdateTime += Time.deltaTime;
+				if (_coolDownUpdateTime > SwingCoolDown)
+				{
+					_coolDownUpdateTime = SwingCoolDown;
+					_canHitBall = true;
+				}
+			}
+			else if (_isDrag)
+			{
+				_dragTime += Time.deltaTime;
 			}
         }
 
 		public void SwingRacquet(Vector2 force)
 		{
+			if (!_canHitBall)
+			{
+				return;
+			}
 			if (force.magnitude > MaxForce)
 			{
 				force = force.normalized * MaxForce;
 			}
 
 			OnHitBall?.Invoke(force);
+			SetSwingCoolDown();
 		}
 
-		public void OnDrag(PointerEventData eventData)
+		private void SetSwingCoolDown()
+		{
+			_canHitBall = false;
+			_coolDownUpdateTime = 0;
+		}
+
+		void IDragHandler.OnDrag(PointerEventData eventData)
 		{
 		}
 
@@ -49,35 +72,24 @@ namespace Tennis
 			if (_canHitBall)
 			{
 				_beginDrag = eventData.position;
-				_deltaTime = 0;
+				_dragTime = 0;
 				_isDrag = true;
 			}
 		}
 		void IEndDragHandler.OnEndDrag(PointerEventData eventData)
 		{
-			if (_isDrag)
+			if (_isDrag && _canHitBall)
 			{
 				var endDrag = eventData.position;
 				var deltaPosition = endDrag - _beginDrag;
-				if (_deltaTime != 0)
+				if (_dragTime != 0)
 				{
-					deltaPosition = deltaPosition / _deltaTime;
-				}
-				_deltaTime = 0;
-				_isDrag = false;
-
-
-				Debug.Log($"{deltaPosition} delta dragged");
-
-				//如果可以擊球
-				if (true)
-				{
+					deltaPosition = deltaPosition / _dragTime;
+					_dragTime = 0;
 					SwingRacquet(deltaPosition);
 				}
-
-				_deltaTime = 0;
+				_isDrag = false;
 			}
-			
 		}
 	}
 }
