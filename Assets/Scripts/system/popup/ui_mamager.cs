@@ -263,6 +263,55 @@ public class ui_manager : MonoBehaviour
 
 		gameModeSelector.init();
 	}
+
+	public void show_pause_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false) {
+		if (!UI_windows.ContainsKey("pauseWindow")) {
+			UI_windows.Add("pauseWindow", new List<baseUIView>());
+		}
+		List<baseUIView> baseUIs = UI_windows["pauseWindow"];
+
+		if (baseUIs.Count == 0) {
+			baseUIs.Add(Instantiate(FileManager.LoadPrefab("pauseWindow"), Get_UILayer()).GetComponent<baseUIView>());
+		}
+		else {
+			int count = ui_manager.GetInstance().Get_UILayer().childCount;
+			baseUIs[0].transform.SetSiblingIndex(count - 1);
+		}
+		pauseWindow pauseWindow = baseUIs[0] as pauseWindow;
+
+
+		pauseWindow.gameObject.SetActive(false);
+
+		pauseWindow.Setting_CB(openCB, closeCB);
+		pauseWindow.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
+
+		pauseWindow.init();
+	}
+
+	public void show_gameResult_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false ){
+		if (!UI_windows.ContainsKey("GameResultWindow")) {
+			UI_windows.Add("GameResultWindow", new List<baseUIView>());
+		}
+		List<baseUIView> baseUIs = UI_windows["GameResultWindow"];
+
+		if (baseUIs.Count == 0) {
+			baseUIs.Add(Instantiate(FileManager.LoadPrefab("GameResultWindow"), Get_UILayer()).GetComponent<baseUIView>());
+		}
+		else {
+			int count = ui_manager.GetInstance().Get_UILayer().childCount;
+			baseUIs[0].transform.SetSiblingIndex(count - 1);
+		}
+		gameResult gameResult = baseUIs[0] as gameResult;
+
+
+		gameResult.gameObject.SetActive(false);
+
+		
+		gameResult.Setting_CB(openCB, closeCB);
+		gameResult.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
+
+		gameResult.init();
+	}
 	public void closeAllUI()
     {
 

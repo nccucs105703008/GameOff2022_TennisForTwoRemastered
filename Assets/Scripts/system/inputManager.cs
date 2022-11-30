@@ -23,6 +23,7 @@ public class inputManager : MonoBehaviour
 			instance.KeyUp_missions = new Dictionary<KeyCode, Action>();
 			instance.KeyDown_missions = new Dictionary<KeyCode, Action>();
 			instance.KeyExist_missions = new Dictionary<KeyCode, Action>();
+			//instance.StartCoroutine(instance._checkInput());
 			DontDestroyOnLoad(instance);
 		}
 		return instance;

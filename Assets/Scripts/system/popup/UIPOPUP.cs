@@ -38,6 +38,12 @@ public class UIPOPUP : baseUIView
 
 	}
 
+	public override void Close()
+    {
+		btnCallBack2?.Invoke();
+		base.Close();
+	}
+
 	public void Setting_Title_content(string title_text, string content_text) {
 		if (title != null) {
 			title.text = title_text;

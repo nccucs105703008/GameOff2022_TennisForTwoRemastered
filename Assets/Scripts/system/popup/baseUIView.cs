@@ -107,7 +107,7 @@ public class baseUIView : MonoBehaviour
 
 	}
 
-    private void OnEnable()
+	protected virtual void OnEnable()
     {
         addToCloseManager();
     }

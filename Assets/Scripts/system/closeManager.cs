@@ -62,8 +62,13 @@ public class closeManager : MonoBehaviour
 	public void lockClose(bool blockAwhile = false)
     {
         closeLock++;
-        if(blockAwhile) Invoke("unlockClose", 0.25f);
+		if (blockAwhile) CoroutineHub.GetInstance().StartCoroutine(_blockAwhile());
     }
+
+	IEnumerator _blockAwhile() {
+		yield return new WaitForSecondsRealtime(0.25f);
+		unlockClose();
+	}
 
     public void unlockClose()
     {

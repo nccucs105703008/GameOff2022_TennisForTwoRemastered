@@ -24,8 +24,8 @@ public class settingWindow : UIPOPUP
 
 		bgm_volume.value = PlayerPrefs.GetFloat("BGMVolume", 1);
 		sound_volume.value = PlayerPrefs.GetFloat("SoundVolume", 1);
-        se_volume.value = PlayerPrefs.GetFloat("SEVolume", 1);		
-
+        se_volume.value = PlayerPrefs.GetFloat("SEVolume", 1);
+		disableCloseSE = true;
         resolution.ClearOptions();
 
         List<Dropdown.OptionData> optionDatas = new List<Dropdown.OptionData>();
