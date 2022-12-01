@@ -86,8 +86,9 @@ public class settingWindow : UIPOPUP
 #if !UNITY_WEBGL
 		int i = resolution.value;
         resolution_manager.settingResolution(resolution_manager.support_Resolutions[i].width, resolution_manager.support_Resolutions[i].height, fullscreen.isOn);
-        languageManager.settingLanguage(languageManager.support_Language_code[language.value]);
 #endif
+		languageManager.settingLanguage(languageManager.support_Language_code[language.value]);
+
         gameObject.SetActive(false);
     }
 }
