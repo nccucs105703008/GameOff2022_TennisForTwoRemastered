@@ -1,5 +1,6 @@
 using MoreMountains.Feedbacks;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -144,6 +145,8 @@ namespace Tennis
 
 			LeftPoint = 0;
 			RightPoint = 0;
+			_leftScore.text = LeftPoint.ToString();
+			_rightScore.text = RightPoint.ToString();
 		}
 
 		public void Dispose()
@@ -263,17 +266,37 @@ namespace Tennis
 
 			if (LeftPoint >= GamePoint)
 			{
-				OnGameSet?.Invoke();
+				_isFighting = false;
+				StartCoroutine(DelayGameSet(Player.Left));
 			}
 			else if (RightPoint >= GamePoint)
 			{
-				OnGameSet?.Invoke();
+				_isFighting = false;
+				StartCoroutine(DelayGameSet(Player.Right));
 			}
 			else
 			{
 				_isFighting = false;
 				_ballInstance.MoveTo(servePosition);
 			}
+		}
+		private IEnumerator DelayGameSet(Player winner)
+		{
+			yield return new WaitForSeconds(0.4f);
+			GameSet(winner);
+		}
+		private void GameSet(Player winner)
+		{
+			switch (winner)
+			{
+				case Player.Left:
+					AudioManager.PlaySE("Win");
+					break;
+				case Player.Right:
+					AudioManager.PlaySE("Lose");
+					break;
+			}
+			OnGameSet?.Invoke();
 		}
 
 		private void ResetAttacker()
@@ -285,6 +308,24 @@ namespace Tennis
 			_canLeftAttack = false;
 			_canRightAttack = false;
 			_attacker = Player.None;
+		}
+
+        private void Update()
+        {
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.A))
+			{
+				Adjudicate(Player.Left);
+			}
+			else if (Input.GetKeyDown(KeyCode.S))
+			{
+				Adjudicate(Player.Right);
+			}
+			else if (Input.GetKeyDown(KeyCode.R))
+			{
+				Restart();
+			}
+#endif
 		}
     }
 }
