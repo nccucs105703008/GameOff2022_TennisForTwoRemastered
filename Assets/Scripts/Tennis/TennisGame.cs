@@ -247,6 +247,7 @@ namespace Tennis
 					_leftScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.LeftServePosition;
 					_servePlayer = scorer;
+					AudioManager.PlaySE("Point");
 					break;
 				case Player.Right:
 					RightPoint++;
@@ -254,10 +255,9 @@ namespace Tennis
 					_rightScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.RightServePosition;
 					_servePlayer = scorer;
+					AudioManager.PlaySE("Point");
 					break;
 			}
-
-			Debug.Log($"CurrentPoint: {LeftPoint}:{RightPoint}");
 			
 			ResetAttacker();
 
