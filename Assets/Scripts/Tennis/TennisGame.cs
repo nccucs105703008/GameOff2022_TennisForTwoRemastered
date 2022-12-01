@@ -63,6 +63,8 @@ namespace Tennis
 		{
 			GamePoint = GlobalValueManager.Get_value<int>("GamePoint", 10);
 			Restart();
+
+			OnGameSet += () => ui_manager.GetInstance().show_gameResult_window();
 		}
 		private void OnDestroy()
 		{
@@ -242,7 +244,8 @@ namespace Tennis
 			switch (scorer)
 			{
 				case Player.Left:
-					LeftPoint++;
+					LeftPoint++;									
+					AchievementManager.IsAchievement();
 					_leftScore.text = LeftPoint.ToString();
 					_leftScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.LeftServePosition;
@@ -286,5 +289,5 @@ namespace Tennis
 			_canRightAttack = false;
 			_attacker = Player.None;
 		}
-    }
+	}
 }

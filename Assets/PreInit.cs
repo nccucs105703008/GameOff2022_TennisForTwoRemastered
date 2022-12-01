@@ -25,6 +25,7 @@ public class PreInit : MonoBehaviour
 		AudioManager.initSetting();
 		languageManager.initLanguage();
 		resolution_manager.initResolution();
+		AchievementManager.initAchievement();
 
 		bool isInit = true;
 		string err = "";
