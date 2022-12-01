@@ -21,4 +21,9 @@ public class gameResult : UIPOPUP
         popup();
         loadingManager.GetInstance().DoneLoading();
     }
+
+    public void BackToMenu() {
+        Close();
+        sceneChangeManager.GetInstance().changeScene("Title");
+    }
 }
