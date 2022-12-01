@@ -127,8 +127,8 @@ public class AudioManager : MonoBehaviour
     {
 		isInit = true;
 
-		SetBGMVolume(PlayerPrefs.GetFloat("BGMVolume", 1));
-        SetSEVolume(PlayerPrefs.GetFloat("SEVolume", 1));
-		SetSoundVolume(PlayerPrefs.GetFloat("SoundVolume", 1));
+		SetBGMVolume(PlayerPrefs.GetFloat("BGMVolume", 0.6f));
+        SetSEVolume(PlayerPrefs.GetFloat("SEVolume", 0.6f));
+		SetSoundVolume(PlayerPrefs.GetFloat("SoundVolume", 0.6f));
     }
 }
