@@ -56,7 +56,8 @@ public class Title : MonoBehaviour
 	}
 
 	public void OpenMainGame() {
-		ui_manager.GetInstance().show_gameModeSelector_window();
+		sceneChangeManager.GetInstance().changeScene("TennisGame");
+		//ui_manager.GetInstance().show_gameModeSelector_window();
 		//ui_manager.GetInstance().show_pause_window();
 		//ui_manager.GetInstance().show_gameResult_window();
 	}
