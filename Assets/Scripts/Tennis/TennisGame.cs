@@ -1,5 +1,6 @@
 using MoreMountains.Feedbacks;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,8 +64,6 @@ namespace Tennis
 		{
 			GamePoint = GlobalValueManager.Get_value<int>("GamePoint", 10);
 			Restart();
-
-			OnGameSet += () => ui_manager.GetInstance().show_gameResult_window();
 		}
 		private void OnDestroy()
 		{
@@ -146,6 +145,8 @@ namespace Tennis
 
 			LeftPoint = 0;
 			RightPoint = 0;
+			_leftScore.text = LeftPoint.ToString();
+			_rightScore.text = RightPoint.ToString();
 		}
 
 		public void Dispose()
@@ -244,12 +245,12 @@ namespace Tennis
 			switch (scorer)
 			{
 				case Player.Left:
-					LeftPoint++;									
-					AchievementManager.IsAchievement();
+					LeftPoint++;
 					_leftScore.text = LeftPoint.ToString();
 					_leftScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.LeftServePosition;
 					_servePlayer = scorer;
+					AudioManager.PlaySE("Point");
 					break;
 				case Player.Right:
 					RightPoint++;
@@ -257,26 +258,45 @@ namespace Tennis
 					_rightScoreFeedback.PlayFeedbacks();
 					servePosition = _courtInstance.RightServePosition;
 					_servePlayer = scorer;
+					AudioManager.PlaySE("Point");
 					break;
 			}
-
-			Debug.Log($"CurrentPoint: {LeftPoint}:{RightPoint}");
 			
 			ResetAttacker();
 
 			if (LeftPoint >= GamePoint)
 			{
-				OnGameSet?.Invoke();
+				_isFighting = false;
+				StartCoroutine(DelayGameSet(Player.Left));
 			}
 			else if (RightPoint >= GamePoint)
 			{
-				OnGameSet?.Invoke();
+				_isFighting = false;
+				StartCoroutine(DelayGameSet(Player.Right));
 			}
 			else
 			{
 				_isFighting = false;
 				_ballInstance.MoveTo(servePosition);
 			}
+		}
+		private IEnumerator DelayGameSet(Player winner)
+		{
+			yield return new WaitForSeconds(0.4f);
+			GameSet(winner);
+		}
+		private void GameSet(Player winner)
+		{
+			switch (winner)
+			{
+				case Player.Left:
+					AudioManager.PlaySE("Win");
+					break;
+				case Player.Right:
+					AudioManager.PlaySE("Lose");
+					break;
+			}
+			OnGameSet?.Invoke();
 		}
 
 		private void ResetAttacker()
@@ -289,5 +309,23 @@ namespace Tennis
 			_canRightAttack = false;
 			_attacker = Player.None;
 		}
-	}
+
+        private void Update()
+        {
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.A))
+			{
+				Adjudicate(Player.Left);
+			}
+			else if (Input.GetKeyDown(KeyCode.S))
+			{
+				Adjudicate(Player.Right);
+			}
+			else if (Input.GetKeyDown(KeyCode.R))
+			{
+				Restart();
+			}
+#endif
+		}
+    }
 }

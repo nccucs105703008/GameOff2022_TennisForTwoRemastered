@@ -30,7 +30,8 @@ public class settingWindow : UIPOPUP
 
         List<Dropdown.OptionData> optionDatas = new List<Dropdown.OptionData>();
         int nowChoice = 0;
-        for(int i = 0; i < resolution_manager.support_Resolutions.Count; i++)
+#if !UNITY_WEBGL
+		for (int i = 0; i < resolution_manager.support_Resolutions.Count; i++)
         {
             if (resolution_manager.support_Resolutions[i].width == resolution_manager.now_resolution_w
                 && resolution_manager.support_Resolutions[i].height == resolution_manager.now_resolution_h) nowChoice = i;
@@ -39,7 +40,7 @@ public class settingWindow : UIPOPUP
         }
         resolution.AddOptions(optionDatas);
         resolution.value = nowChoice;
-
+#endif
         language.ClearOptions();
         optionDatas = new List<Dropdown.OptionData>();
         nowChoice = languageManager.Language_index;
@@ -82,11 +83,11 @@ public class settingWindow : UIPOPUP
         AudioManager.SetBGMVolume(bgm_volume.value);
         AudioManager.SetSEVolume(se_volume.value);
         AudioManager.SetSoundVolume(sound_volume.value);
-
-        int i = resolution.value;
+#if !UNITY_WEBGL
+		int i = resolution.value;
         resolution_manager.settingResolution(resolution_manager.support_Resolutions[i].width, resolution_manager.support_Resolutions[i].height, fullscreen.isOn);
         languageManager.settingLanguage(languageManager.support_Language_code[language.value]);
-
+#endif
         gameObject.SetActive(false);
     }
 }
