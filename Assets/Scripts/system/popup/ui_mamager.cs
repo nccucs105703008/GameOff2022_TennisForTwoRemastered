@@ -288,7 +288,7 @@ public class ui_manager : MonoBehaviour
 		pauseWindow.init();
 	}
 
-	public void show_gameResult_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false ){
+	public void show_gameResult_window(Action openCB = null, Action closeCB = null, bool onlyOpenCB = false, bool onlyCloseCB = false, Action restartFunc = null){
 		if (!UI_windows.ContainsKey("GameResultWindow")) {
 			UI_windows.Add("GameResultWindow", new List<baseUIView>());
 		}
@@ -310,7 +310,7 @@ public class ui_manager : MonoBehaviour
 		gameResult.Setting_CB(openCB, closeCB);
 		gameResult.Setting_onlyCB(onlyOpenCB, onlyCloseCB);
 
-		gameResult.init();
+		gameResult.init(restartFunc);
 	}
 	public void closeAllUI()
     {

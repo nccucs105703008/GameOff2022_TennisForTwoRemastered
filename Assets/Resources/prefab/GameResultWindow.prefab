@@ -521,10 +521,10 @@ MonoBehaviour:
   OpenFeedback: {fileID: 0}
   CloseFeedback: {fileID: 0}
   content: {fileID: 0}
-  btn1: {fileID: 2156642960381174962}
-  btn1_label: {fileID: 0}
+  btn1: {fileID: 0}
+  btn1_label: {fileID: 2156642960381174960}
   btn2: {fileID: 0}
-  btn2_label: {fileID: 0}
+  btn2_label: {fileID: 3845712224039437361}
 --- !u!1 &1655223160877469969
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,7 +542,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1655223160877469966
 RectTransform:
   m_ObjectHideFlags: 0
@@ -611,7 +611,6 @@ GameObject:
   - component: {fileID: 2156642960381174961}
   - component: {fileID: 2156642960381174975}
   - component: {fileID: 2156642960381174960}
-  - component: {fileID: 4694653339221840888}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -667,7 +666,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 54b975d573334dc44913cbc820dec10c, type: 3}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -680,19 +679,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: OK
---- !u!114 &4694653339221840888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2156642960381174962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8beaa831db332f84a99e83f20b09d56d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: button_backMenu
 --- !u!1 &2156642960865645998
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,7 +880,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 54b975d573334dc44913cbc820dec10c, type: 3}
     m_FontSize: 45
     m_FontStyle: 1
     m_BestFit: 0
@@ -1043,7 +1029,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5840446045724267872}
         m_TargetAssemblyTypeName: gameResult, Assembly-CSharp
-        m_MethodName: BackToMenu
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2507,7 +2493,6 @@ GameObject:
   - component: {fileID: 1381220272573091440}
   - component: {fileID: 8783143401581841038}
   - component: {fileID: 3845712224039437361}
-  - component: {fileID: 8549730743314843044}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2563,7 +2548,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 54b975d573334dc44913cbc820dec10c, type: 3}
     m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 1
@@ -2576,19 +2561,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: OK
---- !u!114 &8549730743314843044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6374517947285906772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8beaa831db332f84a99e83f20b09d56d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: button_Restart
 --- !u!1 &7034572919303110015
 GameObject:
   m_ObjectHideFlags: 0
@@ -3546,13 +3518,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 5840446045724267872}
+        m_TargetAssemblyTypeName: gameResult, Assembly-CSharp
+        m_MethodName: BackToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

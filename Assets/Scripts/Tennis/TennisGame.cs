@@ -64,7 +64,7 @@ namespace Tennis
 		{
 			GamePoint = GlobalValueManager.Get_value<int>("GamePoint", 10);
 			Restart();
-			OnGameSet += () => ui_manager.GetInstance().show_gameResult_window();
+			OnGameSet += () => ui_manager.GetInstance().show_gameResult_window(restartFunc: Restart);
 		}
 		private void OnDestroy()
 		{
